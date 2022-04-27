@@ -1,8 +1,49 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body :not(.navbar) {
+    margin-left: 1%;
+    margin-top: 70px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+button {
+    cursor: pointer;
+}
+
+.navbar {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: 1% 1%;
+    overflow: hidden;
+    background-color: rgb(168, 186, 24);
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 97%; /* Full width */
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: #000000;
+    text-align: center;
+    padding: 14px 5%;
+    text-decoration: none;
+    margin: 0px 20px;
+}
+
+#home {
+    font-size:25px;
+    padding: 0.5% 5%;
+}
+
+.navbar input[type='text'] {
+    margin: 0px;
+    float: left;
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    padding: 12px 0;
+    background-color: rgb(254, 252, 173);
+}
+
+.navbar a:hover {
+    background: rgb(249, 251, 184);
+    color: rgb(52, 54, 46);
 }

@@ -1,0 +1,7 @@
+extends layout
+
+block content
+    form(action='/api/post', method='post', enctype='multipart/form-data')
+        label(for='form-title') Título
+        input(type='text', name='title', placeholder='Título')
+        input(type="submit", value='Criar')
