@@ -4,14 +4,23 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var apiRouter = require('./routes/api');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+var mongoose = require('mongoose');
+var mongoDB = 'mongodb://127.0.0.1/TP_RPCW2022'
+
+mongoose.connect(mongoDB, {useNewURLParser: true, useUnifiedTopology: true});
+
+var db = mongoose.connection
+
+db.on('error', (err) => {
+    console.log(err);
+})
+db.once('open', () => {
+    console.log("Conexão ao MongoDB efetuada com sucesso!");
+})
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -19,8 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
