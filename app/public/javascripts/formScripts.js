@@ -12,22 +12,55 @@ $(document).ready(function() {
         var fd = new FormData();
         var title = $('.file-title');
         var author = $('.file-author')
+        var creationDate = $('.file-creationDate')
         var files = $('.file');
 
+        for(var tit of title) {
+            if(tit.value.length == 0) {
+                alert("Please fill all fields")
+                return
+            }
+        }
+
+        for(var aut of author) {
+            if(aut.value.length == 0) {
+                alert("Please fill all fields")
+                return
+            }
+        }
+
+        for(var file of files) {
+            if(file.files.length == 0) {
+                alert("Please fill all fields")
+                return
+            }
+        }
+
+        for(var date of creationDate) {
+            if(date.value.length == 0) {
+                alert("Please fill all fields")
+                return
+            }
+        }
+        
         arrTitles = []
         arrAuthors = []
         arrFiles = []
+        arrCreationDates = []
 
         for(let i = 0; i < files.length; i++) {
             arrTitles.push(title[i].value)
             arrAuthors.push(author[i].value)
+            arrCreationDates.push(creationDate[i].value)
         }
 
         console.log(arrTitles)
+        console.log(arrCreationDates)
         console.log(files[0].files[0].name)
 
         fd.append('authors', arrAuthors)
         fd.append('titles', arrTitles)
+        fd.append('creationDates', arrCreationDates)
 
         compressAndSendZip(files,fd)
 
