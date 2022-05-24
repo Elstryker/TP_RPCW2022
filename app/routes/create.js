@@ -28,6 +28,7 @@ router.post('/file', upload.single('file'), async function(req, res) {
             throw err;
     })
 
+    console.log(oldPath)
     console.log(newPath)
 
     console.log("File received")
@@ -46,14 +47,15 @@ router.post('/file', upload.single('file'), async function(req, res) {
         console.log(files)
         for(var i = 0; i < files.length; i++) {
             var file = files[i]
+            var fileActualPath = __dirname.replace('/routes','/public/files' + file)
             var fileObj = {
                 creationDate: creationDates[i],
                 submissionDate: new Date().toISOString().substring(0,16),
                 author: authors[i],
                 submitter: 'admin',
                 title: titles[i],
-                mimetype: mime.lookup(file),
-                size: fs.lstatSync(file).size,
+                mimetype: mime.lookup(fileActualPath),
+                size: fs.lstatSync(fileActualPath).size,
                 path: file
             }
 
@@ -66,8 +68,8 @@ router.post('/file', upload.single('file'), async function(req, res) {
                 }
             })            
             
-            res.status(200).redirect('/')
         }
+        res.status(200).redirect('/')
 
     })
     .catch(err => {

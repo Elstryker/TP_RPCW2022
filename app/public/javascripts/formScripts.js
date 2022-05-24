@@ -3,7 +3,7 @@ $(document).ready(function() {
     $('#add-one-file').click(function(event) {
         event.preventDefault()
 
-        $('#add-one-file').before("<label for='file-title'>Titulo</label> <input type='text' name='title' class='file-title' placeholder='Título'> <br>   <label for='file-author'>Autor</label> <input type='text' name='author' class='file-author' placeholder='Autor'> <br>   <label for='form-file'>Ficheiro</label> <input type='file' name='file' class='file'> <br>")
+        $('#add-one-file').before("<label for='form-title'>Titulo</label> <input type='text' name='title' class='file-title' placeholder='Título'> <br>   <label for='form-author'>Autor</label> <input type='text' name='author' class='file-author' placeholder='Autor'> <br> <label for='form-creationDate'>Data de Criação</label> <input type='date' name='creationDate' class='file-creationDate'> <br>   <label for='form-file'>Ficheiro</label> <input type='file' name='file' class='file'> <br>")
     })
 
     $('#submit-file').click(function(event) {

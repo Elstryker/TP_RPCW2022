@@ -59,19 +59,15 @@ async function loadZipAndProcessIt(path) {
             var newPath = directoryPath + realName
 
             fs.renameSync(filePath, newPath)
-            returnFiles.push(newPath)
+            returnFiles.push('/' + d + '/' + realName)
         }
     }
+
     fs.readdir(extractPath, (err, files) => {
         if (err) throw err;
       
-        console.log(files)
         for (const file of files) {
-            if(fs.lstatSync(extractPath + file).isDirectory()) {
-                fs.rmdirSync(extractPath + file)
-            }
-            else 
-                fs.unlinkSync(extractPath + file);
+            fs.rmSync(extractPath + file, {recursive: true})
         }
     });
 
@@ -86,9 +82,6 @@ async function getMd5Hash(path) {
     return hash
 
 }
-
-
-
 
 module.exports = {
     loadZipAndProcessIt
