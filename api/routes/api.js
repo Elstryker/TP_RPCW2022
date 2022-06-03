@@ -13,10 +13,14 @@ router.get('/', function(req, res, next) {
         })
 });
 
-router.post('/', function(req, res, next) {
+router.post('/file', function(req, res, next) {
     File.createFile(req.body)
-        .then(() => res.status(200).end())
-        .catch((err) => {res.status(500).end()})
+        .then(() => {
+            console.log("Ficheiro recebido")
+            console.log(req.body)
+            res.status(200).end()
+        })
+        .catch((err) => {res.status(500).end(err)})
 })
 
 module.exports = router;

@@ -1,38 +1,112 @@
 var AdmZip  = require('adm-zip')
 const crypto = require('crypto')
+const fs = require('fs')
+var libxmljs = require('libxmljs');
 
-function loadZipAndProcessIt(path) {
+async function loadZipAndProcessIt(path) {
     var zip = new AdmZip(path)
 
-    extractPath = __dirname + '/../uploads/'
+    var extractPath = __dirname + '/../uploads/'
     zip.extractAllTo(extractPath)
     var zipContents = zip.getEntries()
-    zipContents.forEach(function (entry) {
+
+    console.log("LISTING EXTRACTED DIRECTORIES")
+    fs.readdirSync(extractPath).forEach(file => console.log(file))
+
+    var valid = true
+    var files = []
+    for (const entry of zipContents) {
         if(entry.name == 'manifest-md5.txt') {
             var manifestData = entry.getData().toString().split('\n')
-
-            console.log(manifestData)
             
-            var fileHash = getMd5Hash(filePath)
+            console.log(manifestData)
+
+            for(const data of manifestData) {
+                var sepData = data.split(' ')
+                var fileName = sepData.slice(1).join(' ')
+
+                let filePath = extractPath + fileName
+
+                var fileHash = await getMd5Hash(filePath)
+                console.log(fileHash)
+
+                if(fileHash == sepData[0]) {
+                    console.log("OMG são iguais!")
+                    files.push(fileName)
+                }
+                else {
+                    console.log("WTF is that")
+                    valid = false
+                }
+
+            }
+
         }
-    })
+    }
+
+    var returnFiles = []
+
+    if(valid) {
+        for(const fileName of files) {
+            var d = new Date().toISOString().substring(0,10)
+            var directoryPath = __dirname.replace('/routes','/public/files/' + d + '/')
+            if(!fs.existsSync(directoryPath)) {
+                fs.mkdirSync(directoryPath)
+            }
+
+            var realName = fileName.split('data/')[1]
+            var filePath = __dirname.replace('/routes','/uploads/' + fileName)
+            var newPath = directoryPath + realName
+
+            fs.renameSync(filePath, newPath)
+            returnFiles.push('/' + d + '/' + realName)
+        }
+    }
+
+    fs.readdir(extractPath, (err, files) => {
+        if (err) throw err;
+      
+        for (const file of files) {
+            fs.rmSync(extractPath + file, {recursive: true})
+        }
+    });
+
+    return returnFiles
+
 }
 
 async function getMd5Hash(path) {
-    var fr = new FileReader()
     
-    fr.readAsText(path)
+    var fileContents = fs.readFileSync(path)
+    hash = crypto.createHash('md5').update(String(fileContents)).digest("hex")
+    return hash
 
-    fr.onload( () => {
-        // TODO
-    })
-
-    let hash = crypto.createHash('md5').update('some_string').digest("hex")
 }
 
+function xmlValidatorAndExtractor(xmlActualPath) {
+    var xmlContent = String(fs.readFileSync(xmlActualPath), {encoding: 'utf-8'})
+    var schemaContent = String(fs.readFileSync(__dirname.replace('/routes','/public/XMLSchema/aulaP.xsd')), {encoding: 'utf-8'})
 
+    var xsdDoc = libxmljs.parseXmlString(schemaContent);
+    var xmlDoc = libxmljs.parseXmlString(xmlContent)
 
+    var valid = xmlDoc.validate(xsdDoc)
+    if(!valid) {
+        return undefined
+    }
+
+    var returnData = {
+        creationDate: xmlDoc.get('meta/datas/data').text(),
+        author: xmlDoc.get('meta/autor').text(),
+        title: xmlDoc.get('meta/titulo').text(),
+        fileType: xmlDoc.get('meta/tipo').text()
+    }
+
+    return returnData
+
+}
 
 module.exports = {
-    loadZipAndProcessIt
+    loadZipAndProcessIt,
+    xmlValidatorAndExtractor
 }

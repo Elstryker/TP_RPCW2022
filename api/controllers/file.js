@@ -6,5 +6,5 @@ module.exports.list = () => {
 
 module.exports.createFile = (file) => {
     var newFile = new File(file)
-    newFile.save()
+    return newFile.save()
 }
