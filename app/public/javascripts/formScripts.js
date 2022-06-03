@@ -3,7 +3,17 @@ $(document).ready(function() {
     $('#add-one-file').click(function(event) {
         event.preventDefault()
 
-        $('#add-one-file').before("<label for='form-title'>Titulo</label> <input type='text' name='title' class='file-title' placeholder='Título'> <br>   <label for='form-author'>Autor</label> <input type='text' name='author' class='file-author' placeholder='Autor'> <br> <label for='form-creationDate'>Data de Criação</label> <input type='date' name='creationDate' class='file-creationDate'> <br>   <label for='form-file'>Ficheiro</label> <input type='file' name='file' class='file'> <br>")
+        var title = $("<label for='form-title'>Titulo</label> <input type='text' name='title' class='file-title' placeholder='Título'> <br>")
+        var author = $("<label for='form-author'>Autor</label> <input type='text' name='author' class='file-author' placeholder='Autor'> <br>")
+        var creationDate = $("<label for='form-creationDate'>Data de Criação</label> <input type='date' name='creationDate' class='file-creationDate'> <br>")
+        var type = $("<label for='form-type'>Tipo</label> <input type='text' name='fileType' class='file-type'> placeholder='Tipo' <br>")
+        var file = $("<label for='form-file'>Ficheiro</label> <input type='file' name='file' class='file'> <br>")
+        $('#add-one-file').before(title)
+        $('#add-one-file').before(author)
+        $('#add-one-file').before(creationDate)
+        $('#add-one-file').before(type)
+        $('#add-one-file').before(file)
+
     })
 
     $('#submit-file').click(function(event) {
@@ -13,6 +23,7 @@ $(document).ready(function() {
         var title = $('.file-title');
         var author = $('.file-author')
         var creationDate = $('.file-creationDate')
+        var fileType = $('.file-type')
         var files = $('.file');
 
         for(var tit of title) {
@@ -42,16 +53,25 @@ $(document).ready(function() {
                 return
             }
         }
+
+        for(var fT of fileType) {
+            if(fT.value.length == 0) {
+                alert("Please fill all fields")
+                return
+            }
+        }
         
         arrTitles = []
         arrAuthors = []
         arrFiles = []
         arrCreationDates = []
+        arrFileTypes = []
 
         for(let i = 0; i < files.length; i++) {
             arrTitles.push(title[i].value)
             arrAuthors.push(author[i].value)
             arrCreationDates.push(creationDate[i].value)
+            arrFileTypes.push(fileType[i].value)
         }
 
         console.log(arrTitles)
@@ -61,15 +81,34 @@ $(document).ready(function() {
         fd.append('authors', arrAuthors)
         fd.append('titles', arrTitles)
         fd.append('creationDates', arrCreationDates)
+        fd.append('fileTypes', arrFileTypes)
 
-        compressAndSendZip(files,fd)
+        compressAndSendZip(files,fd,'file')
 
         console.log("Compressing...")
 
     })
+
+    $("#submit-xml").click(function(e) {
+        e.preventDefault()
+
+        var xml = $('.xml');
+
+        if(xml[0].files.length == 0) {
+            alert("Please fill all fields")
+            return
+        }
+
+        var fd = new FormData();
+
+        compressAndSendZip(xml,fd,'xml')
+
+        console.log("Compressing xml...")
+
+    })
 })
 
-async function compressAndSendZip(files,fd) {
+async function compressAndSendZip(files,fd,type) {
     zip = await compressFiles(files)
 
     console.log(zip)
@@ -82,16 +121,17 @@ async function compressAndSendZip(files,fd) {
                 console.log(fd.get('file'))
 
                 $.ajax({
-                    url: 'http://localhost:20000/create/file/',
+                    url: 'http://localhost:20000/create/' + type + '/',
                     type: 'POST',
                     data: fd,
                     contentType: false,
                     processData: false,
                     success: function() {
                         alert('File created successfully')
+                        window.location.href = "/";
                     },
-                    error: function() {
-                        alert('Error creating file')
+                    error: function(request) {
+                        alert(request.responseText)
                     }
                 })
 

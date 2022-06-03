@@ -42,6 +42,7 @@ router.post('/file', upload.single('file'), async function(req, res) {
     var authors = req.body.authors.split(',')
     var titles = req.body.titles.split(',')
     var creationDates = req.body.creationDates.split(',')
+    var fileTypes = req.body.fileTypes.split(',')
 
     files.then(function (files) {
         console.log(files)
@@ -56,20 +57,20 @@ router.post('/file', upload.single('file'), async function(req, res) {
                 title: titles[i],
                 mimetype: mime.lookup(fileActualPath),
                 size: fs.lstatSync(fileActualPath).size,
-                path: file
+                path: file,
+                fileType: fileTypes[i]
             }
 
             console.log(fileObj)
 
-            axios.post('http://localhost:10000/api/file',fileObj, (error) => {
-                if(error) {
-                    res.status(500).render('error', {error: error})
-                    throw error
-                }
-            })            
-            
+            axios.post('http://localhost:10000/api/file',fileObj)
+                .then(function(response) {res.status(200).redirect('/')})
+                .catch(function(error) {
+                    res.status(500).end("Could not create file: Connection to db refused")
+                    console.log("Connection Refused")
+                    fs.rmSync(fileActualPath, {recursive: true})
+                })            
         }
-        res.status(200).redirect('/')
 
     })
     .catch(err => {
@@ -79,8 +80,66 @@ router.post('/file', upload.single('file'), async function(req, res) {
 
 })
 
-router.get('/xml', function(req, res) {
+router.get('/xml', upload.single('file'), function(req, res) {
     res.render('formXML', {})
+})
+
+router.post('/xml', upload.single('file'), function(req, res) {
+    console.log(req.body)
+    let oldPath = __dirname + '/../' + req.file.path
+    let newPath = __dirname + '/../uploads/' + req.file.originalname + '.zip'
+
+    fs.renameSync(oldPath, newPath, function(err) {
+        if(err)
+            throw err;
+    })
+
+    console.log(oldPath)
+    console.log(newPath)
+
+    console.log("File received")
+
+    try {
+        var filesXML = aux.loadZipAndProcessIt(newPath,req.body)
+    } catch (error) {
+        console.log(error)
+    }
+
+    filesXML.then(arr => {
+        var xml = arr[0]
+        var xmlActualPath = __dirname.replace('/routes','/public/files' + xml)
+        var metaData = aux.xmlValidatorAndExtractor(xmlActualPath)
+        if(metaData == undefined) {
+            res.status(500).end('Not acceptable xml')
+            fs.rmSync(xmlActualPath, {recursive: true})
+        }
+        else {
+            var fileObj = {
+                creationDate: metaData.creationDate,
+                submissionDate: new Date().toISOString().substring(0,16),
+                author: metaData.author,
+                submitter: 'admin',
+                title: metaData.title,
+                mimetype: mime.lookup(xmlActualPath),
+                size: fs.lstatSync(xmlActualPath).size,
+                path: xml,
+                fileType: metaData.fileType
+            }
+    
+            console.log(fileObj)
+
+            axios.post('http://localhost:10000/api/file',fileObj)
+                .then(function(response) {res.status(200).redirect('/')})
+                .catch(function(error) {
+                    res.status(500).end("Could not create file: Connection to db refused")
+                    console.log("Connection Refused")
+                    fs.rmSync(xmlActualPath, {recursive: true})
+                })
+
+        }
+
+    })
+
 })
 
 module.exports = router;

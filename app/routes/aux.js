@@ -1,6 +1,7 @@
 var AdmZip  = require('adm-zip')
 const crypto = require('crypto')
 const fs = require('fs')
+var libxmljs = require('libxmljs');
 
 async function loadZipAndProcessIt(path) {
     var zip = new AdmZip(path)
@@ -8,6 +9,9 @@ async function loadZipAndProcessIt(path) {
     var extractPath = __dirname + '/../uploads/'
     zip.extractAllTo(extractPath)
     var zipContents = zip.getEntries()
+
+    console.log("LISTING EXTRACTED DIRECTORIES")
+    fs.readdirSync(extractPath).forEach(file => console.log(file))
 
     var valid = true
     var files = []
@@ -19,15 +23,16 @@ async function loadZipAndProcessIt(path) {
 
             for(const data of manifestData) {
                 var sepData = data.split(' ')
+                var fileName = sepData.slice(1).join(' ')
 
-                let filePath = extractPath + sepData[1]
+                let filePath = extractPath + fileName
 
                 var fileHash = await getMd5Hash(filePath)
                 console.log(fileHash)
 
                 if(fileHash == sepData[0]) {
                     console.log("OMG são iguais!")
-                    files.push(sepData[1])
+                    files.push(fileName)
                 }
                 else {
                     console.log("WTF is that")
@@ -38,11 +43,6 @@ async function loadZipAndProcessIt(path) {
 
         }
     }
-
-    fs.readdirSync(extractPath, (err, files) => {
-        if(err) throw err
-        console.log(files)
-    })
 
     var returnFiles = []
 
@@ -83,6 +83,30 @@ async function getMd5Hash(path) {
 
 }
 
+function xmlValidatorAndExtractor(xmlActualPath) {
+    var xmlContent = String(fs.readFileSync(xmlActualPath), {encoding: 'utf-8'})
+    var schemaContent = String(fs.readFileSync(__dirname.replace('/routes','/public/XMLSchema/aulaP.xsd')), {encoding: 'utf-8'})
+
+    var xsdDoc = libxmljs.parseXmlString(schemaContent);
+    var xmlDoc = libxmljs.parseXmlString(xmlContent)
+
+    var valid = xmlDoc.validate(xsdDoc)
+    if(!valid) {
+        return undefined
+    }
+
+    var returnData = {
+        creationDate: xmlDoc.get('meta/datas/data').text(),
+        author: xmlDoc.get('meta/autor').text(),
+        title: xmlDoc.get('meta/titulo').text(),
+        fileType: xmlDoc.get('meta/tipo').text()
+    }
+
+    return returnData
+
+}
+
 module.exports = {
-    loadZipAndProcessIt
+    loadZipAndProcessIt,
+    xmlValidatorAndExtractor
 }
