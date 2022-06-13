@@ -5,6 +5,7 @@ var multer = require('multer');
 var AdmZip  = require('adm-zip')
 var mime = require('mime-types')
 var axios = require('axios');
+const pathLib = require('path')
 
 const aux = require('./funcs')
 
@@ -20,8 +21,8 @@ router.get('/file', function(req, res) {
 
 router.post('/file', upload.single('file'), async function(req, res) {
     console.log(req.body)
-    let oldPath = __dirname + '/../' + req.file.path
-    let newPath = __dirname + '/../uploads/' + req.file.originalname + '.zip'
+    let oldPath = pathLib.join(__dirname,'/../',req.file.path)
+    let newPath = pathLib.join(__dirname, '/../uploads/', req.file.originalname+'.zip')
 
     fs.renameSync(oldPath, newPath, function(err) {
         if(err)
@@ -48,7 +49,7 @@ router.post('/file', upload.single('file'), async function(req, res) {
         console.log(files)
         for(var i = 0; i < files.length; i++) {
             var file = files[i]
-            var fileActualPath = __dirname.replace('/routes','/public/files' + file)
+            var fileActualPath = pathLib.normalize(__dirname.replace('/routes','/public/files' + file))
             var fileObj = {
                 creationDate: creationDates[i],
                 submissionDate: new Date().toISOString().substring(0,16),
@@ -86,8 +87,8 @@ router.get('/xml', upload.single('file'), function(req, res) {
 
 router.post('/xml', upload.single('file'), function(req, res) {
     console.log(req.body)
-    let oldPath = __dirname + '/../' + req.file.path
-    let newPath = __dirname + '/../uploads/' + req.file.originalname + '.zip'
+    let oldPath = pathLib.join(__dirname,'/../',req.file.path)
+    let newPath = pathLib.join(__dirname,'/../uploads/',req.file.originalname + '.zip')
 
     fs.renameSync(oldPath, newPath, function(err) {
         if(err)
@@ -107,7 +108,7 @@ router.post('/xml', upload.single('file'), function(req, res) {
 
     filesXML.then(arr => {
         var xml = arr[0]
-        var xmlActualPath = __dirname.replace('/routes','/public/files' + xml)
+        var xmlActualPath = pathLib.normalize(__dirname.replace('routes','/public/files' + xml))
         var metaData = aux.xmlValidatorAndExtractor(xmlActualPath)
         if(metaData == undefined) {
             res.status(500).end('Not acceptable xml')

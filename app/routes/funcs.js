@@ -2,11 +2,13 @@ var AdmZip  = require('adm-zip')
 const crypto = require('crypto')
 const fs = require('fs')
 var libxmljs = require('libxmljs');
+const pathLib = require('path')
 
 async function loadZipAndProcessIt(path) {
     var zip = new AdmZip(path)
 
-    var extractPath = __dirname + '/../uploads/'
+    var extractPath = pathLib.join(__dirname,'/../uploads/')
+    console.log("weee|"+extractPath)
     zip.extractAllTo(extractPath)
     var zipContents = zip.getEntries()
 
@@ -25,7 +27,7 @@ async function loadZipAndProcessIt(path) {
                 var sepData = data.split(' ')
                 var fileName = sepData.slice(1).join(' ')
 
-                let filePath = extractPath + fileName
+                let filePath = pathLib.join(extractPath,fileName)
 
                 var fileHash = await getMd5Hash(filePath)
                 console.log(fileHash)
@@ -49,15 +51,17 @@ async function loadZipAndProcessIt(path) {
     if(valid) {
         for(const fileName of files) {
             var d = new Date().toISOString().substring(0,10)
-            var directoryPath = __dirname.replace('/routes','/public/files/' + d + '/')
+            var directoryPath = pathLib.normalize(__dirname.replace('routes','public/files/' + d + '/'))
             if(!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath)
             }
 
             var realName = fileName.split('data/')[1]
-            var filePath = __dirname.replace('/routes','/uploads/' + fileName)
+            var filePath = __dirname.replace('routes','uploads')
+            filePath=pathLib.join(filePath,fileName)
+            
             var newPath = directoryPath + realName
-
+            console.log("\n\n\n\n\n\n\n"+filePath)
             fs.renameSync(filePath, newPath)
             returnFiles.push('/' + d + '/' + realName)
         }
@@ -84,8 +88,8 @@ async function getMd5Hash(path) {
 }
 
 function xmlValidatorAndExtractor(xmlActualPath) {
-    var xmlContent = String(fs.readFileSync(xmlActualPath), {encoding: 'utf-8'})
-    var schemaContent = String(fs.readFileSync(__dirname.replace('/routes','/public/XMLSchema/aulaP.xsd')), {encoding: 'utf-8'})
+    var xmlContent = String(fs.readFileSync(pathLib.normalize(xmlActualPath)), {encoding: 'utf-8'})
+    var schemaContent = String(fs.readFileSync(pathLib.normalize(__dirname.replace('routes','public/XMLSchema/aulaP.xsd')), {encoding: 'utf-8'}))
 
     var xsdDoc = libxmljs.parseXmlString(schemaContent);
     var xmlDoc = libxmljs.parseXmlString(xmlContent)
