@@ -9,7 +9,16 @@ var fileSchema = new mongoose.Schema({
     mimetype: String,
     size: Number,
     path: String,
-    fileType: String
+    fileType: String,
+    comments: [{
+        user : String,
+        comment: String,
+        commentDate: Date
+    }],
+    ratings: [{
+        user: String,
+        rating: Number
+    }]
 })
 
 module.exports = mongoose.model('file', fileSchema, 'files')
