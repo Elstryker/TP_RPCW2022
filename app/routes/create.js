@@ -6,7 +6,7 @@ var AdmZip  = require('adm-zip')
 var mime = require('mime-types')
 var axios = require('axios');
 
-const aux = require('./aux')
+const aux = require('./funcs')
 
 var upload = multer({dest: 'uploads/'})
 
