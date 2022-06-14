@@ -8,9 +8,15 @@ module.exports.listar = () => {
         .exec()
 }
 
-module.exports.consultar = email => {
+// module.exports.consultar = email => {
+//     return User
+//         .findOne({email})
+//         .exec()
+// }
+
+module.exports.consultar = id => {
     return User
-        .findOne({email})
+        .findOne({_id : id})
         .exec()
 }
 
