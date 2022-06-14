@@ -1,19 +1,92 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js")
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js')
-    script(src='/javascripts/bagit.js')
-    script(src="/javascripts/jszip.js")
-    script(src='/javascripts/formScripts.js')
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/w3.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js")
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js')
+		script(src='/javascripts/bagit.js')
+		script(src="/javascripts/jszip.js")
+		script(src='/javascripts/formScripts.js')
+		script(src='/javascripts/_aux.js')
 
-  body
-    .navbar
-        a(href="/",id='home') Home
-        a(href="/create") Criar
-        a(href="/profile") Perfil
-        a(href="/search") Pesquisar
-        input(type="text", name="searchField", placeholder="Search something...")
-    block content
+
+	body
+		div.w3-bar.w3-teal.w3-border.w3-large(id="navbar")
+			a.w3-bar-item.w3-button.w3-wide.w3-blue-grey(href='/') Home
+			a.w3-bar-item.w3-button(href='/recursos') Recursos
+			a.w3-bar-item.w3-button(href='/utilizadores') Utilizadores
+			a.w3-bar-item.w3-button(href='/perfil....') Perfil
+			a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalSignup').style.display='block'") Registar
+			a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalLogin').style.display='block'") Login
+
+
+		.w3-modal(id='modalLogin')
+			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/login" method="POST")
+				.w3-container.w3-teal
+					span(class='w3-closebtn' onclick="document.getElementById('modalLogin').style.display='none'") &times;
+					h2 Menu Login
+				.w3-container
+					label(for="Email")
+						b Email
+					input.w3-input.w3-border(type="email" name="email" placeholder="Email")
+
+					label(for="Password")
+						b Password
+					input.w3-input.w3-border(type="password" name="password" placeholder="Password")
+					p 
+					button(type="submit" class="w3-btn w3-teal w3-block w3-section") Login
+
+					button(class="w3-btn w3-red" onclick="document.getElementById('modalSignup').style.display='none'") Cancelar
+
+		.w3-modal(id='modalSignup')
+			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/signup" method="POST")
+				.w3-container.w3-teal
+					span(class='w3-closebtn' onclick="document.getElementById('modalSignup').style.display='none'") &times;
+					h2 Menu Registar
+					p Preenche o formulário para te registares!
+				
+				.w3-container
+					label(for="Nome")
+						b Nome
+					input.w3-input.w3-border(type="text" name="nome" placeholder="Nome")
+
+					label(for="Email")
+						b Email
+					input.w3-input.w3-border(type="email" name="email" placeholder="Email")
+
+					label(for="Estatuto")
+						b Estatuto
+					select.w3-select(id="tipo_estatuto" name="tipo" required)
+						option(hidden disabled selected value)
+						option(value="Estudante" selected=(tipo == "Estudante") ? true : false) Estudante
+						option(value="Docente" selected=(tipo == "Docente") ? true : false) Docente
+						option(value="Trabalhador" selected=(tipo == "Trabalhador") ? true : false) Trabalhador
+
+					label(for="Filiação")
+						b Filiação
+					input.w3-input.w3-border(type="text" name="filiacao" placeholder="Filiação")
+
+					label(for="Password")
+						b Password
+					input.w3-input.w3-border(type="password" name="password" placeholder="Password")
+
+					button(type="submit" class="w3-btn w3-teal w3-block w3-section") Registar
+					button(class="w3-btn w3-red" onclick="document.getElementById('modalSignup').style.display='none'") Cancelar
+
+		block content
+
+	footer.w3-container.w3-teal.w3-border
+		center
+			a(href="#") Voltar ao inicio
+			p Grupo X - RPCW 2022
+			
+
+	
+	//- #.navbar
+	//- #    a(href="/",id='home') Home
+	//- #    a(href="/create") Criar
+	//- #    a(href="/profile") Perfil
+	//- #    a(href="/search") Pesquisar
+	//- #    input(type="text", name="searchField", placeholder="Search something...")

@@ -1,8 +1,10 @@
-body :not(.navbar) {
-    margin-left: 1%;
-    margin-top: 70px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+/* body :not(.navbar) { */
+    /* margin-left: 1%; */
+    /* margin-top: 70px; */
+    /* font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; */
+/* } */
+
+
 
 button {
     cursor: pointer;
@@ -46,4 +48,22 @@ button {
 .navbar a:hover {
     background: rgb(249, 251, 184);
     color: rgb(52, 54, 46);
+}
+
+#myDIV {
+    height:300px;
+    background-color:#FFFFFF;
+    border: 1px solid black;
+    border-radius:50px;
+    padding:20px;
+  }
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
 }

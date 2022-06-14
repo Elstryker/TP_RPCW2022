@@ -49,7 +49,6 @@ router.get('/recursos/:rid', function(req, res, next) {
 });
 
 router.put('/recursos/:rid', function(req, res, next) {
-    console.log(req.body)
     File.edit(req.params.rid, req.body)
         .then(function() {
             res.status(203).jsonp(req.params.rid)
