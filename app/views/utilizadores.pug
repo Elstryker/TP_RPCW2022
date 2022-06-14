@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    h1 Utilizadores 
+
+	div(style="margin: 20px")
+
+		table.w3-table-all.w3-hoverable 
+			tr.w3-teal
+				th Nome
+				th Estatuto
+				th Filiação
+				th Data de Registo
+
+			each user in users 
+				tr
+					td 
+						a(href='/perfil/'+u._id) #{u.nome}
+					td= u.estatuto // TODO: Ver se vai guardar isto desta forma na BD. 
+					td= u.filiacao
+					td= u.dataRegisto

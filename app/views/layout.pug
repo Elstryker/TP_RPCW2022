@@ -17,7 +17,7 @@ html
 			a.w3-bar-item.w3-button.w3-wide.w3-blue-grey(href='/') Home
 			a.w3-bar-item.w3-button(href='/recursos') Recursos
 			a.w3-bar-item.w3-button(href='/utilizadores') Utilizadores
-			a.w3-bar-item.w3-button(href='/perfil....') Perfil
+			a.w3-bar-item.w3-button(href='/perfil') Perfil
 			a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalSignup').style.display='block'") Registar
 			a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalLogin').style.display='block'") Login
 
@@ -41,7 +41,7 @@ html
 					button(class="w3-btn w3-red" onclick="document.getElementById('modalSignup').style.display='none'") Cancelar
 
 		.w3-modal(id='modalSignup')
-			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/signup" method="POST")
+			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/registo" method="POST")
 				.w3-container.w3-teal
 					span(class='w3-closebtn' onclick="document.getElementById('modalSignup').style.display='none'") &times;
 					h2 Menu Registar
@@ -50,7 +50,7 @@ html
 				.w3-container
 					label(for="Nome")
 						b Nome
-					input.w3-input.w3-border(type="text" name="nome" placeholder="Nome")
+					input.w3-input.w3-border(type="text" name="username" placeholder="Nome")
 
 					label(for="Email")
 						b Email
@@ -58,7 +58,7 @@ html
 
 					label(for="Estatuto")
 						b Estatuto
-					select.w3-select(id="tipo_estatuto" name="tipo" required)
+					select.w3-select(id="tipo_estatuto" name="estatuto" required)
 						option(hidden disabled selected value)
 						option(value="Estudante" selected=(tipo == "Estudante") ? true : false) Estudante
 						option(value="Docente" selected=(tipo == "Docente") ? true : false) Docente
