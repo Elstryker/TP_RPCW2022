@@ -52,7 +52,7 @@ passport.deserializeUser((user, done) => {
     .catch(erro => done(erro, false))
 })
 
-var usersRouter = require('./routes/user');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
