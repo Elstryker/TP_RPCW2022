@@ -13,7 +13,7 @@ function editForm(user){
             <label class="w3-text-teal"><b>Nome: </b></label>
           </div>
           <div class="w3-col s9 w3-border">
-            <input class="w3-input w3-border w3-light-grey" type="text" name="nome" value="${json.username}" required>
+            <input class="w3-input w3-border w3-light-grey" type="text" name="username" value="${json.username}" required>
           </div>
         </div>
   
@@ -22,7 +22,7 @@ function editForm(user){
             <label class="w3-text-teal"><b>Descrição: </b></label>
           </div>
           <div class="w3-col s9 w3-border">
-            <input class="w3-input w3-border w3-light-grey" type="text" name="descricao" value="${json.descricao? json.descricao : ''}" placeHolder=${json.descricao? '' : "Adicione uma descrição."}">
+            <input class="w3-input w3-border w3-light-grey" type="text" name="descricao" value="${json.descricao? json.descricao : ''}" placeHolder="${json.descricao? '' : 'Adicione uma descrição.'}">
           </div>
         </div>
         <div class="w3-container">

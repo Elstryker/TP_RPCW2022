@@ -4,7 +4,7 @@ var User = require('../models/user')
 module.exports.listar = () => {
     return User
         .find()
-        .sort('username')
+        .sort('+username')
         .exec()
 }
 
@@ -25,10 +25,10 @@ module.exports.inserir = u => {
     return novo.save()
 }
 
-module.exports.remover = function(email) {
-    return User.deleteOne({email})
+module.exports.remover = function(id) {
+    return User.deleteOne({_id : id})
 }
 
 module.exports.alterar = function(u) {
-    return User.findByIdAndUpdate({email: u.email}, u, {new: true})
+    return User.findByIdAndUpdate({_id: u._id}, u, {new: true})
 }

@@ -72,5 +72,12 @@ router.get('/users/:id', function(req, res, next) {
         .catch(e => res.status(508).jsonp({error: e}))
 })
 
+router.put('/users/:id', function(req, res, next) {
+    console.log(req.body);
+    User.alterar(req.body)
+        .then(dados => res.status(200).jsonp(dados))
+        .catch(e => res.status(509).jsonp({error:e}))
+})
+
 
 module.exports = router;

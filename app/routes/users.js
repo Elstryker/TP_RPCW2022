@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var axios = require('axios');
+var moment = require('moment')
 
 
 // TODO: Testar esta merda direita. (vai dar cagada for sure)
@@ -30,17 +31,17 @@ router.post('/registo', function(req, res) {
 )
 
 router.get('/', function(req, res, next) {
-  if (!req.cookies.token) aux.gerarTokenConsumidor(req.originalUrl, res)
-  else {
-      axios.get('http://localhost:10000/api/users?token=' + req.cookies.token) // Ver se a info está a ser enviada como deve ser.
-          .then(users => {
-              users.data.forEach(element => {
-                element.password = "";
-              });
-              res.render('utilizadores', {users: users.data})
-          })
-          .catch(error => res.render('error', {error : error}))
-  }
+  
+  axios.get('http://localhost:10000/api/users?token=' + req.cookies.token) // Ver se a info está a ser enviada como deve ser.
+      .then(users => {
+          users.data.forEach(u => {
+            u.password = "";
+            u.dataRegisto = moment(u.dataRegisto).format('DD-MM-YYYY')
+          });
+          res.render('users', {users: users.data})
+      })
+      .catch(error => res.render('error', {error : error}))
+  
 })
 
 module.exports = router;
