@@ -1,49 +1,77 @@
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy
+
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://127.0.0.1/TP_RPCW2022'
 
-mongoose.connect(mongoDB, {useNewURLParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://127.0.0.1:27017/TP_RPCW2022',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000
+  });
 
-var db = mongoose.connection
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Erro de conexão ao MongoDB...'));
+db.once('open', function () {
+  console.log("Conexão ao MongoDB realizada com sucesso...")
+});
 
-db.on('error', (err) => {
-    console.log(err);
+var User = require('./controllers/user')
+
+
+// Configuração da estratégia local (necessário este middleware para Cookies)
+passport.use('login-authentication', new LocalStrategy(
+  { usernameField: 'email' }, (email, password, done) => {
+    User.consultar(email)
+      .then(dados => {
+        const user = dados
+
+        if (!user) { return done(null, false, { message: 'Email inexistente!\n' }) }
+        if (password != user.password) { return done(null, false, { message: 'Credenciais inválidas!\n' }) }
+        return done(null, user)
+      })
+      .catch(e => done(e))
+  })
+)
+
+// Indica-se ao passport como serializar o utilizador
+passport.serializeUser((user, done) => {
+  console.log('Serialização, email: ' + user.user.user.email)
+  done(null, user.username)
 })
-db.once('open', () => {
-    console.log("Conexão ao MongoDB efetuada com sucesso!");
+
+// Desserialização: a partir do id obtem-se a informação do utilizador
+passport.deserializeUser((user, done) => {
+  console.log('Desserialização, email: ' + user.email)
+  User.consultar(user.email)
+    .then(dados => done(null, dados))
+    .catch(erro => done(erro, false))
 })
 
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/user');
 
 var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
