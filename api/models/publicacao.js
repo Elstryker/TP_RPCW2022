@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 var pubSchema = new mongoose.Schema({
     titulo: {type: String, required: true},
     descricao: {type: String, required: true},
+    id_autor: {type: String, required: true},
     autor: {type: String, required: true},
     id_recurso: {type: String, required: true},
     dataCriacao: {type: String, required: true, default: new Date().toISOString().substr(0,19)},
