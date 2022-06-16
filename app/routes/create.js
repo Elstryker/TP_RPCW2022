@@ -78,7 +78,6 @@ router.post('/file', upload.single('file'), async function(req, res) {
         console.log(err)
         res.status(500).render('error', { error: err })
     })
-
 })
 
 router.get('/xml', upload.single('file'), function(req, res) {
