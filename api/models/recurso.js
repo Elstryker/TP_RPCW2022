@@ -12,7 +12,9 @@ var fileSchema = new mongoose.Schema({
 })
 
 var recursoSchema = new mongoose.Schema({
-    autor: {type: String, required: true},
+    idAutor: {type: String, required: true},
+    nomeAutor: {type: String, required: true},
+    titulo: {type: String, required: true},
     tipo: {type: String, required: true},
     descricao: {type: String, required: false},
     dataCriacao: {type: String, required: true},
