@@ -4,7 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var apiRouter = require('./routes/api');
+var publicacoesRouter = require('./routes/publicacoes')
+var recursosRouter = require('./routes/recursos')
+var noticiasRouter = require('./routes/noticias')
+var usersRouter = require('./routes/users')
 var jwt = require('jsonwebtoken')
 
 var app = express();
@@ -44,7 +47,10 @@ app.use(function(req, res, next) {
 })
 
 
-app.use('/api', apiRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/publicacoes', publicacoesRouter);
+app.use('/api/noticias', noticiasRouter);
+app.use('/api/recursos', recursosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
