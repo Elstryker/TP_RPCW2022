@@ -67,6 +67,6 @@ function deleteUser(id){
     $.ajax({
       url: '/users/'+id,
       type: 'DELETE',
-      success: function(result) {window.location.replace("/home");}
+      success: function(result) {window.location.replace("/");}
     });
 }
