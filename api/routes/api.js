@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const File = require('../controllers/file')
 const User = require('../controllers/user')
 
+
 /* GET home page. */
+
+/*
 router.get('/', function(req, res, next) {
     File.list()
         .then(function (data) {
@@ -13,7 +15,9 @@ router.get('/', function(req, res, next) {
             res.status(500).jsonp(err);
         })
 });
+*/
 
+/*
 router.post('/file', function(req, res, next) {
     File.createFile(req.body)
         .then(() => {
@@ -23,6 +27,7 @@ router.post('/file', function(req, res, next) {
         })
         .catch((err) => {res.status(501).end(err)})
 })
+*/
 
 //--ENDPOINT RECURSOS--//
 
@@ -59,6 +64,8 @@ router.put('/recursos/:rid', function(req, res, next) {
             res.status(506).jsonp({ error:err.message })
         })
 })
+
+/** Users */
 
 router.get('/users', function(req, res, next) {
     User.listar()
