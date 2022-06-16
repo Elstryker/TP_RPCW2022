@@ -79,5 +79,12 @@ router.put('/users/:id', function(req, res, next) {
         .catch(e => res.status(509).jsonp({error:e}))
 })
 
+router.post('/users/registo', function (req, res) {
+    console.log(req.body);
+    User.inserir(req.body)
+      .then(dados => res.status(201).jsonp({ dados }))
+      .catch(error => res.status(510).jsonp({ error }))
+  })
+
 
 module.exports = router;

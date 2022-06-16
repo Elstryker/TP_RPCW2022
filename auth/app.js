@@ -24,7 +24,7 @@ var User = require('./controllers/user')
 
 
 // Configuração da estratégia local (necessário este middleware para Cookies)
-passport.use('login-authentication', new LocalStrategy(
+passport.use('login-auth', new LocalStrategy(
   { usernameField: 'email' }, (email, password, done) => {
     User.consultar(email)
       .then(dados => {
@@ -32,30 +32,57 @@ passport.use('login-authentication', new LocalStrategy(
 
         if (!user) { return done(null, false, { message: 'Email inexistente!\n' }) }
         if (password != user.password) { return done(null, false, { message: 'Credenciais inválidas!\n' }) }
-        return done(null, user)
+        
+        return done(null, {strat: 'login-auth', success: true, user})
       })
       .catch(e => done(e))
   })
 )
 
+// Configuração da estratégia local
+passport.use('signup-auth', new LocalStrategy(
+  {usernameField: 'email', passReqToCallback: true}, 
+  (req, email, password, done) => {
+    User.inserir({
+      username: req.body.username,
+      email,
+      password,
+      nivel: "produtor",
+      estatuto: req.body.estatuto,
+      filiacao: req.body.filiacao              
+    })
+    .then(dados => {
+      return done(null, {strat: 'signup-auth', success: true, user: dados})
+    })
+    .catch(e => done(e))
+    })
+)
+
+
 // Indica-se ao passport como serializar o utilizador
 passport.serializeUser((user, done) => {
-  console.log('Serialização, email: ' + user.user.user.email)
-  done(null, user.username)
+  console.log(user);
+  console.log('Serialização, email: ' + user.user.email)
+  done(null, user.user.username)
 })
 
 // Desserialização: a partir do id obtem-se a informação do utilizador
 passport.deserializeUser((user, done) => {
-  console.log('Desserialização, email: ' + user.email)
-  User.consultar(user.email)
+  console.log('Desserialização, email: ' + user.user.email)
+  User.consultar(user.user.email)
     .then(dados => done(null, dados))
     .catch(erro => done(erro, false))
 })
 
 var usersRouter = require('./routes/users');
 
+const session = require('express-session');
+
 var app = express();
 
+
+// After you declare "app"
+app.use(session({ secret: 'TP_RPCW2022' }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -78,7 +105,8 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  console.log(err);
+  
 });
 
 module.exports = app;

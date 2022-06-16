@@ -31,29 +31,57 @@ router.get('/consumidor', function(req, res) {
 
 */
 
-// inserir novo utilizador
-router.post('/', function (req, res) {
-  User.inserir(req.body)
-    .then(dados => res.status(201).jsonp({ dados }))
-    .catch(error => res.status(500).jsonp({ error }))
-})
+router.post('/registo', passport.authenticate('signup-auth'), function(req, res) {
+    if (req.user.success) {
+      jwt.sign({
+        email: req.user.user.email, 
+        nivel: req.user.user.nivel,
+        _id: req.user.user._id,
+        sub: 'TP_RPCW2022'}, 
+        "TP_RPCW2022",
+        {expiresIn: "1d"},
+        function(e, token) {
+          if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+          else res.status(201).jsonp({token})
+      })
+    }
+    else res.status(201).jsonp({invalidInput: req.user.invalidInput, error: req.user.message}) 
+  })
 
-// login de utilizador
-router.post('/login', passport.authenticate('login-authentication'), function (req, res) {
-  jwt.sign({
-    _id: req.user.user._id,
-    nome: req.user.user.nome,
-    nivel: req.user.user.nivel,
-    sub: 'TP_RPCW2022'
-  },
-    "TP_RPCW2022",
-    { expiresIn: "1d" },
-    function (e, token) {
-      if (e) res.status(500).jsonp({ error: "Erro na geração do token: " + e })
-      else res.status(201).jsonp({ token })
-    })
+  router.post('/login', passport.authenticate('login-auth'), function(req, res) {
+    if (req.user.success && req.user.user.bloqueado == false) {
+      jwt.sign({
+        _id: req.user.user._id,
+        username: req.user.user.username,
+        nivel: req.user.user.nivel,
+        sub: 'TP_RPCW2022'
+    }, 
+        "TP_RPCW2022",
+        {expiresIn: "1d"},
+        function(e, token) {
+          if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+          else res.status(201).jsonp({token})
+      })
+    }
+    else res.status(201).jsonp({invalidInput: req.user.invalidInput, error: req.user.message}) 
+  })
 
-})
+
+// router.post('/login', passport.authenticate('login-authentication'), function (req, res) {
+//   jwt.sign({
+//     _id: req.user.user._id,
+//     username: req.user.user.username,
+//     nivel: req.user.user.nivel,
+//     sub: 'TP_RPCW2022'
+//   },
+//     "TP_RPCW2022",
+//     { expiresIn: "1d" },
+//     function (e, token) {
+//       if (e) res.status(500).jsonp({ error: "Erro na geração do token: " + e })
+//       else res.status(201).jsonp({ token })
+//     })
+
+// })
 
 
 module.exports = router;
