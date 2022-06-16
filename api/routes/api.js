@@ -73,14 +73,12 @@ router.get('/users/:id', function(req, res, next) {
 })
 
 router.put('/users/:id', function(req, res, next) {
-    console.log(req.body);
     User.alterar(req.body)
         .then(dados => res.status(200).jsonp(dados))
         .catch(e => res.status(509).jsonp({error:e}))
 })
 
 router.post('/users/registo', function (req, res) {
-    console.log(req.body);
     User.inserir(req.body)
       .then(dados => res.status(201).jsonp({ dados }))
       .catch(error => res.status(510).jsonp({ error }))

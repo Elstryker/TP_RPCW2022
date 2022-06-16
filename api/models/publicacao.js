@@ -3,16 +3,16 @@ const mongoose = require('mongoose')
 var publicacaoSchema = new mongoose.Schema({
     author: {type: String, required: true},
     id_file: {type: String, required: true},
-    comments: [{
-        user_id : String,
-        username: String,
-        comment: String,
-        commentDate: Date
-    }],
-    ratings: [{
-        user: String,
-        rating: Number
-    }]
+    comments: {type:[{
+        user_id : {type: String, required: true},
+        username: {type: String, required: true},
+        comment: {type: String, required: true},
+        commentDate: {type: Date, required: true}
+    }], default:[]},
+    ratings: {type: [{
+        user: {type: String, required: true},
+        rating: {type: Number, required: true}
+    }], default: []}
 })
 
 module.exports = mongoose.model('user', userSchema, 'users')

@@ -12,24 +12,20 @@ router.get('/', function (req, res) {
     .catch(e => res.status(500).jsonp({ error: e }))
 })
 
-/* TO BE CONTINUED...
+
 
 router.get('/consumidor', function(req, res) {
   jwt.sign({
     nivel: 'consumidor',
-    sub: 'TP_DAW2020'}, 
-    "TP_DAW2020",
+    sub: 'TP_RPCW2022'}, 
+    "TP_RPCW2022",
     {expiresIn: "1h"},
     function(e, token) {
-      if(e) res.status(500).jsonp({error: "Erro na geração do token de consumidor: " + e}) 
+      if(e) res.status(511).jsonp({error: "Erro na geração do token de consumidor: " + e}) 
       else res.status(201).jsonp({token})
   })
 })
 
-
-
-
-*/
 
 router.post('/registo', passport.authenticate('signup-auth'), function(req, res) {
     if (req.user.success) {

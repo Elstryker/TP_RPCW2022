@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var apiRouter = require('./routes/api');
+var jwt = require('jsonwebtoken')
 
 var app = express();
 
@@ -27,6 +28,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use(function(req, res, next) {
+  var token = req.query.token || req.body.token;
+
+  if (token == 'consumidor') next();
+  else if (token) {
+    jwt.verify(token, 'TP_RPCW2022', function(e, payload) {
+      if (e) res.status(401).jsonp({error: e});
+      else next();
+    })
+  } 
+  else res.status(401).jsonp({error: 'Token inexistente'});
+})
+
 
 app.use('/api', apiRouter);
 

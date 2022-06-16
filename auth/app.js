@@ -25,54 +25,74 @@ var User = require('./controllers/user')
 
 // Configuração da estratégia local (necessário este middleware para Cookies)
 passport.use('login-auth', new LocalStrategy(
-  { usernameField: 'email' }, (email, password, done) => {
-    User.consultar(email)
-      .then(dados => {
-        const user = dados
-
-        if (!user) { return done(null, false, { message: 'Email inexistente!\n' }) }
-        if (password != user.password) { return done(null, false, { message: 'Credenciais inválidas!\n' }) }
+    { usernameField: 'email' }, (email, password, done) => {
+        User.consultar(email)
+        .then(dados => {
+            const user = dados
         
-        return done(null, {strat: 'login-auth', success: true, user})
-      })
-      .catch(e => done(e))
+            if(!user) { return done(null, {strat: 'login-auth', success: false, invalidInput: 'email', message: 'Email inexistente!\n'})}
+            if(password != user.password) { return done(null, {strat: 'login-auth', success: false, invalidInput: 'password', message: 'Password inválida!\n'})}
+            
+            return done(null, {strat: 'login-auth', success: true, user})
+        })
+        .catch(e => done(e))
   })
 )
 
 // Configuração da estratégia local
 passport.use('signup-auth', new LocalStrategy(
-  {usernameField: 'email', passReqToCallback: true}, 
-  (req, email, password, done) => {
-    User.inserir({
-      username: req.body.username,
-      email,
-      password,
-      nivel: "produtor",
-      estatuto: req.body.estatuto,
-      filiacao: req.body.filiacao              
-    })
-    .then(dados => {
-      return done(null, {strat: 'signup-auth', success: true, user: dados})
-    })
-    .catch(e => done(e))
-    })
+    {usernameField: 'email', passReqToCallback: true}, 
+
+    (req, email, password, done) => {
+        User.consultar(email)
+            .then(dados => {
+                if (dados) return done(null, {strat: 'signup-auth', success: false, invalidInput: 'email', message: 'Email já existe!\n'})
+                else {
+                    User.inserir({
+                        username: req.body.username,
+                        email,
+                        password,
+                        nivel: "produtor",
+                        estatuto: req.body.estatuto,
+                        filiacao: req.body.filiacao
+                        })
+                        .then(dados => {
+                        return done(null, {strat: 'signup-auth', success: true, user: dados})
+                        })
+                        .catch(e => done(e))
+                }
+            })
+            .catch(e => done(e))
+        })
 )
 
-
+passport.serializeUser((user,done) => {
+  if (user.success) {
+    console.log('Serialização, email: ' + user.user.email)
+    done(null, {strat: user.strat, success: user.success, email: user.user.email})
+  }
+  else done(null, user)
+})
+/*
 // Indica-se ao passport como serializar o utilizador
 passport.serializeUser((user, done) => {
-  console.log(user);
   console.log('Serialização, email: ' + user.user.email)
   done(null, user.user.username)
 })
-
+*/
 // Desserialização: a partir do id obtem-se a informação do utilizador
 passport.deserializeUser((user, done) => {
-  console.log('Desserialização, email: ' + user.user.email)
-  User.consultar(user.user.email)
-    .then(dados => done(null, dados))
-    .catch(erro => done(erro, false))
-})
+    if (user.success) {
+      console.log('Desserialização, email: ' + user.email)
+      User.consultar(user.email)
+        .then(dados => done(null, {success: true, ...dados}))
+        .catch(erro => done(erro, false))
+    }
+    else {
+      delete user.strat
+      done(null, user)
+    }
+  })
 
 var usersRouter = require('./routes/users');
 

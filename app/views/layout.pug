@@ -19,12 +19,15 @@ html
 			a.w3-bar-item.w3-button.w3-wide.w3-blue-grey(href='/') Home
 			a.w3-bar-item.w3-button(href='/recursos') Recursos
 			a.w3-bar-item.w3-button(href='/users') Utilizadores
-			a.w3-bar-item.w3-button(href='/perfil') Perfil
-			a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalSignup').style.display='block'") Registar
-			a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalLogin').style.display='block'") Login
+			
+			if (nivel == "consumidor")
+				a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalSignup').style.display='block'") Registar
+				a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalLogin').style.display='block'") Login
+			else 
+				a.w3-bar-item.w3-button(href='/perfil') Perfil
+				a.w3-bar-item.w3-button.w3-right(href="users/logout") Logout
 
-
-		.w3-modal(id='modalLogin')
+		.w3-modal(id='modalLogin' style=invalidLField ? "display: block" : "display: none")
 			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/login" method="POST")
 				.w3-container.w3-teal
 					span(class='w3-button w3-display-topright' onclick="document.getElementById('modalLogin').style.display='none'") &times;
@@ -34,20 +37,25 @@ html
 						div(class="w3-col", style="width: 50px")
 							i(class="w3-xxlarge fa fa-envelope-o" style="color: teal")
 						div.w3-rest
-							input.w3-input.w3-border(type="email" name="email" placeholder="Email" required)
+							input.w3-input.w3-border(type="email" name="email" style=(invalidLField == "email") ? "background-color: #ffb3b3" : "" placeholder="Email" required)
 
 					.w3-row.w3-section
 						div.w3-center(class="w3-col", style="width: 50px")
 							i(class="w3-xxlarge fa fa-lock" style="color: teal")
 						div.w3-rest
-							input.w3-input.w3-border(type="password" name="password" placeholder="Password" required)
+							input.w3-input.w3-border(type="password" name="password" style=(invalidLField == "password") ? "background-color: #ffb3b3" : "" placeholder="Password" required)
+
+
+						if (invalidLField)
+							.w3-center
+								p.w3-text-red(style="text-align: center")= error_msg
 					
 					button(type="submit" class="w3-btn w3-teal w3-block w3-section") Login
 
 					button(class="w3-btn w3-red" onclick="document.getElementById('modalLogin').style.display='none'") Cancelar
 					p
 
-		.w3-modal(id='modalSignup')
+		.w3-modal(id='modalSignup' style=invalidSField ? "display: block" : "display: none")
 			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/registo" method="POST")
 				.w3-container.w3-teal
 					span(class='w3-button w3-display-topright' onclick="document.getElementById('modalSignup').style.display='none'") &times;
@@ -66,7 +74,7 @@ html
 						div(class="w3-col", style="width: 50px")
 							i(class="w3-xxlarge fa fa-envelope-o" style="color: teal")
 						div.w3-rest
-							input.w3-input.w3-border(type="email" name="email" placeholder="Email" required)
+							input.w3-input.w3-border(type="email" name="email" style=(invalidSField == "email") ? "background-color: #ffb3b3" : "" placeholder="Email" required)
 
 					.w3-row.w3-section
 						div(class="w3-col", style="width: 50px")
@@ -90,6 +98,10 @@ html
 							i(class="w3-xxlarge fa fa-lock" style="color: teal")
 						div.w3-rest
 							input.w3-input.w3-border(type="password" name="password" placeholder="Password" required)
+
+					if (invalidSField)
+							.w3-center
+								p.w3-text-red(style="text-align: center")= error_msg
 
 					button(type="submit" class="w3-btn w3-teal w3-block w3-section") Registar
 					p
