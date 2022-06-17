@@ -8,7 +8,8 @@ var userSchema = new mongoose.Schema({
     estatuto: {type: String, required: true},
     filiacao: {type: String, required: true},
     nivel: {type: String, required: true},
-    dataRegisto: {type: String, default: new Date().toISOString().substr(0,19)}
+    dataRegisto: {type: String, default: new Date().toISOString().substr(0,19)},
+    bloqueado: {type: Boolean, required: true, default: false}
 })
 
 module.exports = mongoose.model('user', userSchema, 'users')

@@ -44,7 +44,7 @@ router.post('/login', function(req, res) {
             }
             else {
                 aux.renderIndex(req.cookies.token, res, {
-                    invalidSField: dados.data.invalidInput, 
+                    invalidLField: dados.data.invalidInput, 
                     ...req.body,
                     error_msg: dados.data.error})
             }

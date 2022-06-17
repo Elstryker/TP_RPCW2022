@@ -28,7 +28,7 @@ module.exports.atualizarEstado = (idRecurso,estado,disponivel) => {
 
 module.exports.noticiasUtilizador = id =>{
     return Noticia
-        .find({"idAuto": id})
+        .find({"idAutor": id})
         .sort('-data')
         .exec()
 }

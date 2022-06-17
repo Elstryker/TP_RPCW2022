@@ -29,5 +29,13 @@ router.post('/registo', function (req, res) {
       .catch(error => res.status(510).jsonp({ error }))
   })
 
+router.delete('/:id', function(req, res, next) {
+    User.alterar(({
+            _id: req.params.id,
+            bloqueado: true
+        }))
+        .then(dados => res.status(200).jsonp(dados))
+        .catch(e => res.status(511).jsonp({error: e}))
+})
 
 module.exports = router;
