@@ -3,11 +3,11 @@ const mongoose = require('mongoose')
 var fileSchema = new mongoose.Schema({
     creationDate: {type: String, required: true},
     submissionDate: {type: String, required: true},
-    autor: {type: String, required: true},
+    author: {type: String, required: true},
     submitter: {type: String, required: true},
-    titulo: {type: String, required: true},
+    title: {type: String, required: true},
     mimetype: {type: String, required: true},
-    tamanho: {type: Number, required: true},
+    size: {type: Number, required: true},
     path: {type: String, required: true},
 })
 

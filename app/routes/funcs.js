@@ -8,11 +8,11 @@ async function loadZipAndProcessIt(path) {
     var zip = new AdmZip(path)
 
     var extractPath = pathLib.join(__dirname,'/../uploads/')
-    console.log("weee|"+extractPath)
+    //console.log("weee|"+extractPath)
     zip.extractAllTo(extractPath)
     var zipContents = zip.getEntries()
 
-    console.log("LISTING EXTRACTED DIRECTORIES")
+    //console.log("LISTING EXTRACTED DIRECTORIES")
     fs.readdirSync(extractPath).forEach(file => console.log(file))
 
     var valid = true
@@ -21,7 +21,7 @@ async function loadZipAndProcessIt(path) {
         if(entry.name == 'manifest-md5.txt') {
             var manifestData = entry.getData().toString().split('\n')
             
-            console.log(manifestData)
+            //console.log(manifestData)
 
             for(const data of manifestData) {
                 var sepData = data.split(' ')
@@ -30,14 +30,14 @@ async function loadZipAndProcessIt(path) {
                 let filePath = pathLib.join(extractPath,fileName)
 
                 var fileHash = await getMd5Hash(filePath)
-                console.log(fileHash)
+                //console.log(fileHash)
 
                 if(fileHash == sepData[0]) {
-                    console.log("OMG são iguais!")
+                    //console.log("OMG são iguais!")
                     files.push(fileName)
                 }
                 else {
-                    console.log("WTF is that")
+                    //console.log("WTF is that")
                     valid = false
                 }
 
@@ -61,7 +61,7 @@ async function loadZipAndProcessIt(path) {
             filePath=pathLib.join(filePath,fileName)
             
             var newPath = directoryPath + realName
-            console.log("\n\n\n\n\n\n\n"+filePath)
+            //console.log("\n\n\n\n\n\n\n"+filePath)
             fs.renameSync(filePath, newPath)
             returnFiles.push('/' + d + '/' + realName)
         }
@@ -111,35 +111,10 @@ function xmlValidatorAndExtractor(xmlActualPath) {
 }
 
 
-function groupAndSortByDate(list){
-    var grupo = {}
-    list.forEach(o => {
-      let dia = o.dataCriacao.split("T")[0]
-      if(!(dia in grupo)) {
-        grupo[dia] = []
-      }
-      grupo[dia].push(o)
-    })
-    
-    for(var [data, lista] of Object.entries(grupo)){
-      lista.sort((a,b) => {
-        let x1 = a.data
-        let x2 = b.data
-        return new Date(x2).getTime() - new Date(x1).getTime();
-      })
-    }
-    var orderedDates = {}
-    Object.keys(grupo).sort(function(a, b) {
-      return moment(b, 'YYYY/MM/DD').toDate() - moment(a, 'YYYY/MM/DD').toDate();
-      }).forEach(function(key) {
-        orderedDates[key] = grupo[key];
-      })
-    return orderedDates
-}
+
 
 
 module.exports = {
     loadZipAndProcessIt,
-    xmlValidatorAndExtractor,
-    groupAndSortByDate
+    xmlValidatorAndExtractor
 }

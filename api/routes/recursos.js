@@ -32,11 +32,7 @@ router.get('/:rid', function(req, res) {
 // Inserir recursos
 router.post('/', function(req, res){
     Recurso.inserir(req.body.recurso)
-      .then(dados => {
-        RecursoTipo.inserir(req.body.tiposNovos)
-          .then(dados2 => res.status(201).jsonp({dados}))
-          .catch(e => res.status(505).jsonp({error: e}))
-      })
+      .then(dados =>  res.status(201).jsonp({dados}))
       .catch(e => res.status(506).jsonp({error: e}))
 })
 
@@ -47,5 +43,12 @@ router.put('/', function(req, res){
       .catch(e => res.status(507).jsonp({error: e}))
 })
 
+//Incrementar numero de Downloads de um recurso
+router.post('/download', function(req, res){
+    Recurso.incrementarDownloads(req.body)
+    .then(dados => res.status(201).jsonp({dados}))
+    .catch(e => res.status(507).jsonp({error: e}))
+
+})
 
 module.exports = router;

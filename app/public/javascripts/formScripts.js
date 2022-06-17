@@ -6,25 +6,34 @@ $(document).ready(function() {
         var title = $("<label for='form-title'>Titulo</label> <input type='text' name='title' class='file-title' placeholder='Título'> <br>")
         var author = $("<label for='form-author'>Autor</label> <input type='text' name='author' class='file-author' placeholder='Autor'> <br>")
         var creationDate = $("<label for='form-creationDate'>Data de Criação</label> <input type='date' name='creationDate' class='file-creationDate'> <br>")
-        var type = $("<label for='form-type'>Tipo</label> <input type='text' name='fileType' class='file-type'> placeholder='Tipo' <br>")
         var file = $("<label for='form-file'>Ficheiro</label> <input type='file' name='file' class='file'> <br>")
         $('#add-one-file').before(title)
         $('#add-one-file').before(author)
         $('#add-one-file').before(creationDate)
-        $('#add-one-file').before(type)
         $('#add-one-file').before(file)
 
     })
 
     $('#submit-file').click(function(event) {
         event.preventDefault();
-
+        console.log("...");
         var fd = new FormData();
         var title = $('.file-title');
         var author = $('.file-author')
         var creationDate = $('.file-creationDate')
-        var fileType = $('.file-type')
         var files = $('.file');
+
+        var autorRecurso = $('#autorRecurso').val()
+        var tituloRecurso = $('#tituloRecurso').val()
+        var descRecurso = $('#descRecurso').val()
+        var tipoRecurso = $('#tipoRecurso').val()
+        var dataCriacao = $('#dataCriacao').val()
+
+        console.log(autorRecurso);
+        console.log(tituloRecurso);
+        console.log(descRecurso);
+        console.log(tipoRecurso);
+        console.log(dataCriacao);
 
         for(var tit of title) {
             if(tit.value.length == 0) {
@@ -53,35 +62,32 @@ $(document).ready(function() {
                 return
             }
         }
-
-        for(var fT of fileType) {
-            if(fT.value.length == 0) {
-                alert("Please fill all fields")
-                return
-            }
-        }
         
         arrTitles = []
         arrAuthors = []
         arrFiles = []
         arrCreationDates = []
-        arrFileTypes = []
 
         for(let i = 0; i < files.length; i++) {
             arrTitles.push(title[i].value)
             arrAuthors.push(author[i].value)
             arrCreationDates.push(creationDate[i].value)
-            arrFileTypes.push(fileType[i].value)
         }
 
         console.log(arrTitles)
         console.log(arrCreationDates)
         console.log(files[0].files[0].name)
 
+
+        fd.append('autorRecurso', autorRecurso)
+        fd.append('tituloRecurso', tituloRecurso)
+        fd.append('descRecurso', descRecurso)
+        fd.append('tipoRecurso', tipoRecurso)
+        fd.append('dataCriacao', dataCriacao)
         fd.append('authors', arrAuthors)
         fd.append('titles', arrTitles)
         fd.append('creationDates', arrCreationDates)
-        fd.append('fileTypes', arrFileTypes)
+        
 
         compressAndSendZip(files,fd,'file')
 
@@ -121,7 +127,7 @@ async function compressAndSendZip(files,fd,type) {
                 console.log(fd.get('file'))
 
                 $.ajax({
-                    url: 'http://localhost:20000/create/' + type + '/',
+                    url: 'http://localhost:20000/recursos/' + type + '/',
                     type: 'POST',
                     data: fd,
                     contentType: false,

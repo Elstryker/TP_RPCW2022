@@ -118,7 +118,7 @@ router.post('/xml', upload.single('file'), function(req, res) {
                 creationDate: metaData.creationDate,
                 submissionDate: new Date().toISOString().substring(0,16),
                 author: metaData.author,
-                submitter: 'admin',
+                submitter: 'admin', // Mudar!
                 title: metaData.title,
                 mimetype: mime.lookup(xmlActualPath),
                 size: fs.lstatSync(xmlActualPath).size,

@@ -19,7 +19,7 @@ router.get('/:id', function(req, res, next) {
     else {
         var token = aux.unveilToken(req.cookies.token)
 
-        axios.get('http://localhost:10000/api/noticias/autor/' + req.params.id + '?token=' + req.coookies.token)
+        axios.get('http://localhost:10000/api/noticias/autor/' + req.params.id + '?token=' + req.cookies.token)
             .then(noticias => {
                 axios.get('http://localhost:10000/api/users/' + req.params.id + '?token=' + req.cookies.token)
                     .then(user => {
