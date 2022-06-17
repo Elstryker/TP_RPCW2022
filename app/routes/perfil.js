@@ -29,7 +29,7 @@ router.get('/:id', function(req, res, next) {
                         res.render('perfil', {nivel: token.nivel,
                                     dono: dono,
                                     user: user.data,
-                                    noticias: aux.groupAndSortByDate(noticias.data)})
+                                    noticias: noticias.data})
                     })
                     .catch(error => res.render('error', {error: error}))
             })
