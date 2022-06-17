@@ -6,7 +6,6 @@ var moment = require('moment')
 var aux = require('./auxiliars')
 
 
-// TODO: Testar esta merda direita. (vai dar cagada for sure)
 router.post('/registo', function(req, res) {
     console.log(req.body);
     axios.post('http://localhost:30000/users/registo', req.body)

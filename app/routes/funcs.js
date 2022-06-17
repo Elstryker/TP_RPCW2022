@@ -110,7 +110,36 @@ function xmlValidatorAndExtractor(xmlActualPath) {
 
 }
 
+
+function groupAndSortByDate(list){
+    var grupo = {}
+    list.forEach(o => {
+      let dia = o.dataCriacao.split("T")[0]
+      if(!(dia in grupo)) {
+        grupo[dia] = []
+      }
+      grupo[dia].push(o)
+    })
+    
+    for(var [data, lista] of Object.entries(grupo)){
+      lista.sort((a,b) => {
+        let x1 = a.data
+        let x2 = b.data
+        return new Date(x2).getTime() - new Date(x1).getTime();
+      })
+    }
+    var orderedDates = {}
+    Object.keys(grupo).sort(function(a, b) {
+      return moment(b, 'YYYY/MM/DD').toDate() - moment(a, 'YYYY/MM/DD').toDate();
+      }).forEach(function(key) {
+        orderedDates[key] = grupo[key];
+      })
+    return orderedDates
+}
+
+
 module.exports = {
     loadZipAndProcessIt,
-    xmlValidatorAndExtractor
+    xmlValidatorAndExtractor,
+    groupAndSortByDate
 }

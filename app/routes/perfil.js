@@ -18,19 +18,21 @@ router.get('/:id', function(req, res, next) {
     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res)
     else {
         var token = aux.unveilToken(req.cookies.token)
-        axios.get('http://localhost:10000/api/users/' + req.params.id + '?token=' + req.cookies.token)
-            .then(user => {
 
-                var dono = req.params.id == token._id || token.nivel == 'admin'
-                res.render('perfil', {nivel: token.nivel,
+        axios.get('http://localhost:10000/api/noticias/autor/' + req.params.id + '?token=' + req.coookies.token)
+            .then(noticias => {
+                axios.get('http://localhost:10000/api/users/' + req.params.id + '?token=' + req.cookies.token)
+                    .then(user => {
+                        var dono = req.params.id == token._id || token.nivel == 'admin'
+                        console.log(aux.groupAndSortByDate(noticias.data)); //TODO:
+                        res.render('perfil', {nivel: token.nivel,
                                     dono: dono,
                                     user: user.data,
-                                    publicacoes: [], //TODO: Meter publicações.
-                                    noticias: []})
+                                    noticias: aux.groupAndSortByDate(noticias.data)})
+                    })
+                    .catch(error => res.render('error', {error: error}))
             })
-            .catch(error =>{
-                res.render('error', {error : error})
-            })
+            .catch(error => res.render('error', {error: error}))
         }
 })
 
@@ -41,21 +43,19 @@ router.post('/:id/editar', function(req, res, next){
 
         if ((token.nivel == 'produtor' || token.nivel == 'admin') && token._id == req.params.id) {
 
-        var updated = {_id : req.params.id,
-                    username: req.body.username, 
-                    estatuto: req.body.estatuto, 
-                    filiacao: req.body.filiacao,
-                    descricao: req.body.descricao}
+            var updated = {_id : req.params.id,
+                        username: req.body.username, 
+                        estatuto: req.body.estatuto, 
+                        filiacao: req.body.filiacao,
+                        descricao: req.body.descricao}
 
-        console.log(req.params);
-
-        axios.put('http://localhost:10000/api/users/' + req.params.id + '?token='+req.cookies.token, updated)
-            .then(dados => res.redirect("/perfil/"+req.params.id))
-            .catch(error => res.render('error', {error: error}))
+            axios.put('http://localhost:10000/api/users/' + req.params.id + '?token='+req.cookies.token, updated)
+                .then(dados => res.redirect("/perfil/"+req.params.id))
+                .catch(error => res.render('error', {error: error}))
 
         }
         else {
-            res.redirect('/perfil/' + req.params.id)
+            res.redirect('/perfil/')
         }
     }
 })
