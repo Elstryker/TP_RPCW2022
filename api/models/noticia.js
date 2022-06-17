@@ -9,7 +9,7 @@ var noticiaSchema = new mongoose.Schema({
     tipo: {type: String, required: true},
     estado: {type: String, required: true}
   }, required: true},
-  data: {type: String, default: new Date().toISOString().substr(0,19)}
+  data: {type: String, required: true}
 });
 
 module.exports = mongoose.model('noticia', noticiaSchema)

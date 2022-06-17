@@ -10,8 +10,5 @@ router.get("/", function (req, res, next) {
   else aux.renderIndex(req.cookies.token, res, {});
 });
 
-router.get("/recursos", function (req, res, next) {
-  res.render("recursos");
-});
 
 module.exports = router;

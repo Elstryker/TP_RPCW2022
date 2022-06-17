@@ -17,7 +17,7 @@ Noticia.noticiasUtilizador(req.params.id)
 
 // Inserir noticia
 router.post('/', function(req, res){
-    Noticia.inserir(req.body)
+    Noticia.inserir(req.body.noticia)
         .then(dados => {
         Noticia.atualizarEstado(req.params.id, null, true)
             .then(dados => res.status(201).jsonp({dados}))

@@ -30,6 +30,7 @@ router.get('/consumidor', function(req, res) {
 router.post('/registo', passport.authenticate('signup-auth'), function(req, res) {
     if (req.user.success) {
       jwt.sign({
+        username: req.user.user.username,
         email: req.user.user.email, 
         nivel: req.user.user.nivel,
         _id: req.user.user._id,

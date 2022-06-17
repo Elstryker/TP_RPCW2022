@@ -10,7 +10,6 @@ router.post('/registo', function(req, res) {
     console.log(req.body);
     axios.post('http://localhost:30000/users/registo', req.body)
         .then(dados => {
-            
             if(dados.data.token){
                 res.cookie('token', dados.data.token, {
                     expires: new Date(Date.now() + '1d'),
@@ -65,7 +64,7 @@ router.get('/', function(req, res, next) {
         .then(users => {
             users.data.forEach(u => {
                 delete u.password;
-                u.dataRegisto = moment(u.dataRegisto).format('DD-MM-YYYY')
+                u.dataRegisto = moment(new Date(u.dataRegisto)).format('DD-MM-YYYY')
             });
             res.render('users', {nivel: token.nivel, users: users.data})
         })

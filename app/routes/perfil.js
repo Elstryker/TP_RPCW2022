@@ -24,7 +24,8 @@ router.get('/:id', function(req, res, next) {
                 axios.get('http://localhost:10000/api/users/' + req.params.id + '?token=' + req.cookies.token)
                     .then(user => {
                         var dono = req.params.id == token._id || token.nivel == 'admin'
-                        console.log(aux.groupAndSortByDate(noticias.data)); //TODO:
+
+
                         res.render('perfil', {nivel: token.nivel,
                                     dono: dono,
                                     user: user.data,

@@ -60,7 +60,7 @@ function variaveisRecursos(recursos, tipos_bd, cookiesToken, meus_recursos) {
 function groupAndSortByDate(list){
 var grupo = {}
 list.forEach(o => {
-    let dia = o.dataCriacao.split("T")[0]
+    var dia = o
     if(!(dia in grupo)) {
     grupo[dia] = []
     }

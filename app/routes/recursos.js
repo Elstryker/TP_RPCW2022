@@ -106,14 +106,15 @@ router.post('/file', upload.single('file'), async function(req, res) {
 
             axios.post('http://localhost:10000/api/recursos?token=' + req.cookies.token, {recurso: recursoObj})
                 .then(dados => {
-                    var novoRecurso = dados.data
+                    var novoRecurso = dados.data.dados
                     console.log(novoRecurso);
 
                     if(novoRecurso.visibilidade){
+                        console.log(token)
                         
                         var noticiaObj = {
                             idAutor: token._id,
-                            nomeAutor: token.nome,
+                            nomeAutor: token.username,
                             recurso: {
                                 id: novoRecurso._id,
                                 titulo: novoRecurso.titulo,
@@ -122,8 +123,8 @@ router.post('/file', upload.single('file'), async function(req, res) {
                             },
                             data: dataAtual
                         }
-
-                        axios.post('http://localhost:10000/api/noticias?token' + req.cookies.token, {noticiaObj})
+                        
+                        axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, {noticia: noticiaObj})
                             .then(dados => res.redirect('/perfil'))
                             .catch(error => res.render('error', {error}))
                     }
