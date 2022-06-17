@@ -48,8 +48,8 @@ function variaveisRecursos(recursos, tipos_bd, cookiesToken, meus_recursos) {
         r.dataUltimaMod = moment(r.dataUltimaMod).format('HH:mm:ss, DD-MM-YYYY')
 
         if (!idsAutores.includes(r.idAutor)) {
-        idsAutores.push(r.idAutor)
-        nomesAutores.push(r.nomeAutor)
+            idsAutores.push(r.idAutor)
+            nomesAutores.push(r.nomeAutor)
         }
     })
 
