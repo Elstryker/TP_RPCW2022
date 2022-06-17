@@ -25,16 +25,16 @@ module.exports.addComentario = (id, com) => {
 
 module.exports.atualizarEstado = (idRecurso, estado) => {
     return Publicacao.updateMany(
-        {"id_recurso": idRecurso},
+        {"idRecurso": idRecurso},
         [{ $set: {
-            'vis_recurso': estado
+            'visRecurso': estado
         }}],
         {multi: true})
 }
 
 module.exports.pubsUtilizador = (id) => {
     return Publicacao
-        .find({id_autor: id})
+        .find({idAutor: id})
         .sort('-dataCriacao')
         .exec()
 }

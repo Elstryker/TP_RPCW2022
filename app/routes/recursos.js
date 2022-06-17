@@ -19,14 +19,14 @@ var upload = multer({dest: 'uploads/'})
 router.get('/', function(req, res) {
     if (!req.cookies.token) aux.gerarTokenConsumidor(req.originalUrl, res)
     else {
-    axios.get('http://localhost:10000/api/recursos?token=' + req.cookies.token)
-        .then(dados => {
-            axios.get('http://localhost:10000/api/recursos/tipos?token=' + req.cookies.token)
-                .then(tipos_bd => {
-                    var varsPug = aux.variaveisRecursos(dados.data, tipos_bd, req.cookies.token, false)
-                    res.render('recursos', varsPug)
-                })
-                .catch(error => res.render('error', {error}))
+        axios.get('http://localhost:10000/api/recursos?token=' + req.cookies.token)
+            .then(dados => {
+                axios.get('http://localhost:10000/api/recursos/tipos?token=' + req.cookies.token)
+                    .then(tipos_bd => {
+                        var varsPug = aux.variaveisRecursos(dados.data, tipos_bd, req.cookies.token, false)
+                        res.render('recursos', varsPug)
+                    })
+                    .catch(error => res.render('error', {error}))
         })
         .catch(error => res.render('error', {error}))
     }
@@ -105,30 +105,43 @@ router.post('/file', upload.single('file'), async function(req, res) {
             }
 
             axios.post('http://localhost:10000/api/recursos?token=' + req.cookies.token, {recurso: recursoObj})
-                .then(dados => {
-                    var novoRecurso = dados.data.dados
+                .then(recurso => {
+                    var novoRecurso = recurso.data.dados
                     console.log(novoRecurso);
 
-                    if(novoRecurso.visibilidade){
-                        console.log(token)
-                        
-                        var noticiaObj = {
-                            idAutor: token._id,
-                            nomeAutor: token.username,
-                            recurso: {
-                                id: novoRecurso._id,
-                                titulo: novoRecurso.titulo,
-                                tipo: novoRecurso.tipo,
-                                estado: 'Novo'
-                            },
-                            data: dataAtual
-                        }
-                        
-                        axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, {noticia: noticiaObj})
-                            .then(dados => res.redirect('/perfil'))
-                            .catch(error => res.render('error', {error}))
+                    pubObj = {
+                        titulo: tituloRecurso,
+                        descricao: descRecurso,
+                        idAutor: token._id,
+                        nomeAutor: autorRecurso,
+                        idRecurso: novoRecurso._id,
+                        dataCriacao: dataRecurso,
+                        visRecurso: novoRecurso.visibilidade
                     }
 
+                    axios.post('http://localhost:10000/api/publicacoes?token?' + req.cookies.token, {pub: pubObj})
+                        .then(pub => {
+
+                            if(novoRecurso.visibilidade){
+                                //console.log(token)
+                                
+                                var noticiaObj = {
+                                    idAutor: token._id,
+                                    nomeAutor: token.username,
+                                    recurso: {
+                                        id: novoRecurso._id,
+                                        titulo: novoRecurso.titulo,
+                                        tipo: novoRecurso.tipo,
+                                        estado: 'Novo'
+                                    },
+                                    data: dataAtual
+                                }
+                                
+                                axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, {noticia: noticiaObj})
+                                    .then(dados => res.redirect('/perfil'))
+                                    .catch(error => res.render('error', {error}))
+                            }
+                        })
                 })
                 .catch(error => res.render('error', {error}))
 
