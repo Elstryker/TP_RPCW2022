@@ -8,7 +8,48 @@ block content
 
         h1  As minhas publicações
 
-        button.w3-button.w3-xlarge.w3-blue-gray.w3-border.w3-border-white.w3-round-large Adicionar Publicação
+        button.w3-button.w3-xlarge.w3-blue-gray.w3-border.w3-border-white.w3-round-large(onclick="document.getElementById('addPub').style.display='block'") Adicionar Publicação
+
+        .w3-modal(id='addPub' style=invalidLField ? "display: block" : "display: none")
+            form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/login" method="POST")
+                .w3-container.w3-teal
+                    span(class='w3-button w3-display-topright' onclick="document.getElementById('modalLogin').style.display='none'") &times;
+                    h2 Adicionar Publicação
+                .w3-container
+                    .w3-row.w3-section
+                        div.w3-rest
+                            input.w3-input.w3-border(type="text" name="titulo" style=(invalidLField == "titulo") ? "background-color: #ffb3b3" : "" placeholder="Titulo" required)
+                    .w3-row.w3-section
+                        div.w3-rest
+                            input.w3-input.w3-border(type="text" name="descricao" style=(invalidLField == "descricao") ? "background-color: #ffb3b3" : "" placeholder="Descrição")
+                    .w3-row.w3-section
+                        div.w3-rest
+                            input.w3-input.w3-border(type="text" name="categoria" style=(invalidLField == "categoria") ? "background-color: #ffb3b3" : "" placeholder="Categoria")
+                    .w3-row.w3-section
+                        div.w3-rest
+                                label(for='files') Ficheiros:
+                                input#files(type='file' name='files' multiple='')
+                    .w3-row.w3-section
+                        div.w3-rest
+                                label(for='form-creationDate') Data de criação
+                                input.file-creationDate(type='date', name='creationDate')
+
+
+                        if (invalidLField)
+                            .w3-center
+                                p.w3-text-red(style="text-align: center")= error_msg
+                    
+                    button(type="submit" class="w3-btn w3-teal w3-block w3-section") Login
+
+                    button(class="w3-btn w3-red" onclick="document.getElementById('modalLogin').style.display='none'") Cancelar
+                    p
+
+
+
+
+
+
+
         p
         .w3-round-large.w3-teal(style='width:90%;')
             .publicacao
