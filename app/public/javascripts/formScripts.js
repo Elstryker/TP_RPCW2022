@@ -29,6 +29,7 @@ $(document).ready(function() {
         var tipoRecurso = $('#tipoRecurso').val()
         var dataCriacao = $('#dataCriacao').val()
 
+
         console.log(autorRecurso);
         console.log(tituloRecurso);
         console.log(descRecurso);

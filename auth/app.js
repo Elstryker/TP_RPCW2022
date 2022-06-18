@@ -49,12 +49,12 @@ passport.use('signup-auth', new LocalStrategy(
                 if (dados) return done(null, {strat: 'signup-auth', success: false, invalidInput: 'email', message: 'Email já existe!\n'})
                 else {
                     User.inserir({
-                        username: req.body.username,
-                        email,
-                        password,
-                        nivel: "produtor",
-                        estatuto: req.body.estatuto,
-                        filiacao: req.body.filiacao
+                            username: req.body.username,
+                            email,
+                            password,
+                            nivel: "produtor",
+                            estatuto: req.body.estatuto,
+                            filiacao: req.body.filiacao
                         })
                         .then(dados => {
                         return done(null, {strat: 'signup-auth', success: true, user: dados})
@@ -67,11 +67,11 @@ passport.use('signup-auth', new LocalStrategy(
 )
 
 passport.serializeUser((user,done) => {
-  if (user.success) {
-    console.log('Serialização, email: ' + user.user.email)
-    done(null, {strat: user.strat, success: user.success, email: user.user.email})
-  }
-  else done(null, user)
+    if (user.success) {
+        console.log('Serialização, email: ' + user.user.email)
+        done(null, {strat: user.strat, success: user.success, email: user.user.email})
+    }
+    else done(null, user)
 })
 /*
 // Indica-se ao passport como serializar o utilizador
@@ -83,16 +83,16 @@ passport.serializeUser((user, done) => {
 // Desserialização: a partir do id obtem-se a informação do utilizador
 passport.deserializeUser((user, done) => {
     if (user.success) {
-      console.log('Desserialização, email: ' + user.email)
-      User.consultar(user.email)
+        console.log('Desserialização, email: ' + user.email)
+        User.consultar(user.email)
         .then(dados => done(null, {success: true, ...dados}))
         .catch(erro => done(erro, false))
     }
     else {
-      delete user.strat
-      done(null, user)
+        delete user.strat
+        done(null, user)
     }
-  })
+})
 
 var usersRouter = require('./routes/users');
 

@@ -7,6 +7,14 @@ module.exports.listar = () => {
         .exec()
 }
 
+module.exports.listarIndex = () => {
+    return Noticia
+        .find()
+        .sort('-data')
+        .limit(5)
+        .exec()
+}
+
 module.exports.atualizarEstado = (idRecurso,estado,disponivel) => {
     if (!disponivel) {
         return Noticia.updateMany(

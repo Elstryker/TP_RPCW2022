@@ -12,9 +12,9 @@ module.exports.listar = () => {
         idAutor: 1,
         nomeAutor: 1,
         visibilidade: 1,
-        ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
+        ratings: { $ifNull: [{ $avg: "$ratings.rating" }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.tamanho" },
+        tamanho: { $sum: "$ficheiros.size" },
         nrDownloads: 1,
       },
     },
@@ -39,7 +39,7 @@ module.exports.pesquisarMeusRecursos = (idAutor) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.tamanho" },
+        tamanho: { $sum: "$ficheiros.size" },
         nrDownloads: 1,
       },
     },
@@ -66,7 +66,7 @@ module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.tamanho" },
+        tamanho: { $sum: "$ficheiros.size" },
         nrDownloads: 1,
       },
     },
@@ -93,7 +93,7 @@ module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.tamanho" },
+        tamanho: { $sum: "$ficheiros.size" },
         nrDownloads: 1,
       },
     },
@@ -120,7 +120,7 @@ module.exports.pesquisarPorTipo = (tipo, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.tamanho" },
+        tamanho: { $sum: "$ficheiros.size" },
         nrDownloads: 1,
       },
     },
@@ -152,9 +152,9 @@ module.exports.consultar = (id) => {
 
 module.exports.classificar = (idRecurso, rating) => {
   return Recurso.findOneAndUpdate(
-    { _id: idRecurso },
-    { $push: { ratings: rating } },
-    { useFindAndModify: false, new: true }
+      { _id: idRecurso },
+      { $push: { ratings: rating } },
+      { useFindAndModify: false, new: true }
   );
 };
 
@@ -166,33 +166,15 @@ module.exports.atualizarClassificacao = (idRecurso, rating) => {
   );
 };
 
-module.exports.editarRecursoTirar = (id, novos) => {
-  return Recurso.updateOne(
-    { _id: id },
-    { $pull: { ficheiros: { _id: { $in: novos.removerFicheiros } } } },
-    { multi: true }
-  ).exec();
+module.exports.editar = function(r) {
+  return Recurso.findByIdAndUpdate({_id: r.id}, r, {new: true})
 };
 
-module.exports.editarRecursoAdicionar = (id, novos) => {
-  return Recurso.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        titulo: novos.titulo,
-        descricao: novos.descricao,
-        tipo: novos.tipo,
-        visibilidade: novos.visibilidade,
-      },
-      $push: { ficheiros: { $each: novos.ficheiros } },
-    },
-    { useFindAndModify: false, new: true }
-  ).exec();
-};
 
 module.exports.consultarTitulo = (id) => {
   return Recurso.findOne({ _id: id }, { titulo: 1, _id: 0 }).exec();
 };
+
 
 module.exports.incrementarDownloads = (id) => {
   return Recurso.findOneAndUpdate(
@@ -201,6 +183,7 @@ module.exports.incrementarDownloads = (id) => {
     { useFindAndModify: false, new: true }
   );
 };
+
 
 module.exports.inserir = (recurso) => {
   var novoRec = new Recurso(recurso);

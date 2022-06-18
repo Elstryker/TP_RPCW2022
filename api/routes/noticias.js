@@ -8,6 +8,12 @@ router.get('/', function(req, res) {
       .then(dados => res.status(200).jsonp(dados))
       .catch(e => res.status(501).jsonp({error: e}))
   })
+
+  router.get('/index', function(req, res) {
+    Noticia.listarIndex()
+      .then(dados => res.status(200).jsonp(dados))
+      .catch(e => res.status(501).jsonp({error: e}))
+  })
   
 router.get('/autor/:id',function(req,res){
 Noticia.noticiasUtilizador(req.params.id)

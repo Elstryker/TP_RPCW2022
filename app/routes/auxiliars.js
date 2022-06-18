@@ -84,13 +84,26 @@ return orderedDates
 }
 
 function renderIndex(cookiesToken, res, atribs) {
-    // Ir buscar publicações, notícias, etc...
-
     var token = unveilToken(cookiesToken)
-    var publicacoes = {}
-    var noticias = {}
+    
+    axios.get('http://localhost:10000/api/publicacoes?token=' + cookiesToken)
+        .then(pubs =>{
+            var publicacoes = pubs.data
 
-    res.render('index', {nivel: token.nivel, pubs: publicacoes, noticias: noticias, ...atribs})
+            axios.get('http://localhost:10000/api/noticias/index?token=' + cookiesToken)
+            .then(noticias => {
+                var noticias = noticias.data
+                var id = token._id
+
+                axios.get('http://localhost:10000/api/recursos?token=' + cookiesToken)
+                    .then(recursos => {
+                        var recs = recursos.data;
+                        res.render('index', {nivel: token.nivel, id, pubs: publicacoes, noticias: noticias, recursos: recs, ...atribs})
+                    })
+            })
+            .catch(error => res.render('error', {error}))
+        })
+        .catch(error => res.render('error', {error}))
 }
 
 module.exports = {

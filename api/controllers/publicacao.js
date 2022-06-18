@@ -32,6 +32,12 @@ module.exports.atualizarEstado = (idRecurso, estado) => {
         {multi: true})
 }
 
+module.exports.alterar = function(u) {
+    return User.findByIdAndUpdate({_id: u._id}, u, {new: true})
+}
+
+
+
 module.exports.pubsUtilizador = (id) => {
     return Publicacao
         .find({idAutor: id})

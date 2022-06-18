@@ -28,7 +28,7 @@ router.post('/', function(req,res){
 
 // Atualizar estado para indisponível
 router.post('/atualizarEstado/:id', function(req, res){
-    Publicacao.atualizarEstado(req.params.id, req.body.disp)
+    Publicacao.atualizarEstado(req.params.id, req.body.visRecurso)
         .then(dados => res.status(201).jsonp({dados}))
         .catch(e => res.status(505).jsonp({error: e}))
 })

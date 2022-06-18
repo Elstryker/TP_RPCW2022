@@ -28,6 +28,23 @@ router.post('/registo', function(req, res) {
         .catch(error => res.render('error', {error}))
 })
 
+router.delete('/:id',function(req,res){
+    if (!req.cookies.token) res.render('error', {error})
+    else {
+    var token = aux.unveilToken(req.cookies.token)
+    if(token.nivel == 'admin') {
+        axios.delete('http://localhost:10000/users/' + req.params.id + '?token=' + req.cookies.token)
+        .then(dados => {
+            res.redirect("/")
+        })
+        .catch(error => res.render('error', {error}))
+    }
+    else {
+        res.render('error', {error})
+    }
+    }
+})
+
 router.post('/login', function(req, res) {
     axios.post('http://localhost:30000/users/login', req.body)
         .then(dados => {
