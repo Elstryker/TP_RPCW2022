@@ -14,7 +14,7 @@ module.exports.listar = () => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $avg: "$ratings.rating" }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -37,9 +37,10 @@ module.exports.pesquisarMeusRecursos = (idAutor) => {
         idAutor: 1,
         nomeAutor: 1,
         visibilidade: 1,
-        ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
+        ratings: { $ifNull: [[{ $avg: "$ratings.rating" }, 0], 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        //tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -66,7 +67,7 @@ module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -93,7 +94,7 @@ module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -120,7 +121,7 @@ module.exports.pesquisarPorTipo = (tipo, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -143,7 +144,7 @@ module.exports.consultar = (id) => {
       nomeAutor: 1,
       visibilidade: 1,
       ratings: 1,
-      tamanho: { $sum: "$ficheiros.size" },
+      tamanho: 1,
       ficheiros: 1,
       nrDownloads: 1,
     }
@@ -152,9 +153,9 @@ module.exports.consultar = (id) => {
 
 module.exports.classificar = (idRecurso, rating) => {
   return Recurso.findOneAndUpdate(
-      { _id: idRecurso },
-      { $push: { ratings: rating } },
-      { useFindAndModify: false, new: true }
+    { _id: idRecurso },
+    { $push: { ratings: rating } },
+    { useFindAndModify: false, new: true }
   );
 };
 
@@ -166,8 +167,8 @@ module.exports.atualizarClassificacao = (idRecurso, rating) => {
   );
 };
 
-module.exports.editar = function(r) {
-  return Recurso.findByIdAndUpdate({_id: r.id}, r, {new: true})
+module.exports.editar = function (r) {
+  return Recurso.findByIdAndUpdate({ _id: r.id }, r, { new: true })
 };
 
 
