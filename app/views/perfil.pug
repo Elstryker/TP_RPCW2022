@@ -46,7 +46,7 @@ block content
             if left==true
                 .container.left
                     .content
-                        h2= n.data.replace('T',' ')
+                        h3= n.data.replace('T',' ')
                         if n.recurso.estado == 'Novo'
                             p= `Adicionou o recurso ${n.recurso.titulo}`
                         else if n.recurso.estado == 'Comentado'
@@ -56,7 +56,7 @@ block content
             else
                 .container.right
                     .content
-                        h2= n.data.replace('T',' ')
+                        h3= n.data.replace('T',' ')
                         if n.recurso.estado == 'Novo'
                             p= `Adicionou o recurso ${n.recurso.titulo}`
                         else if n.recurso.estado == 'Comentado'

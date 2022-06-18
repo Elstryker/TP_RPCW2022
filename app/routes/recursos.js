@@ -23,11 +23,18 @@ var upload = multer({ dest: "uploads/" });
 router.get("/", function (req, res) {
     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res);
     else {
-        axios.get("http://localhost:10000/api/recursos?token=" + req.cookies.token)
-            .then((dados) => {
-                res.render("recursos", dados);
-            })
-            .catch((error) => res.render("error", { error }));
+      var token = aux.unveilToken(req.cookies.token)
+      axios.get(`http://localhost:10000/api/publicacoes/autor/${token._id}?token=` + req.cookies.token)
+      .then(pubs =>{
+          var publicacoes = pubs.data
+          axios.get(`http://localhost:10000/api/recursos/autor/${token._id}?token=` + req.cookies.token)
+                  .then(recursos => {
+                      var recs = recursos.data;
+                      res.render('recursos', {nivel: token.nivel, id: token._id, pubs: publicacoes, recursos: recs})
+                  }).catch(error => res.render('error', {error}))
+          })
+          .catch(error => res.render('error', {error}))
+
     }
 });
 

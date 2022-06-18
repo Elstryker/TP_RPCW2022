@@ -72,7 +72,7 @@ router.post('editar/:id', function (req, res) {
 })
 
 router.get('/autor/:id', function(req,res) {
-    Recurso.pesquisarMeusRecursos(req.body)
+    Recurso.pesquisarMeusRecursos(req.params.id)
         .then((dados) => res.status(200).jsonp({dados}))
         .catch((e) => res.status(510).jsonp({error : e}))
 })
