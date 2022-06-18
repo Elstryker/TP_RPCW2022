@@ -195,13 +195,13 @@ router.post('/editar/:id', function(req, res){
     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res)
     else {
         var token = aux.unveilToken(req.cookies.token)
-
+        console.log("teste")
         // O req.body recebe cenas de um form c a edição do recurso.
 
         // os nomes do body têm de ter os mesmos que o recurso! Confirmar nos models ao criar o formulário para a alteração!! // TODO:TOnecas!
 
         //verifica que é mesmo o autor antes de avançar com a edição
-        if ((token.nivel == 'produtor' || token.nivel == 'admin') && token._id == req.body.idAutor) {
+        if ((token.nivel == 'produtor' || token.nivel == 'admin'))/*&& token._id == req.body.idAutor)*/ { // TODO: Perceber o porquê disto aqui
 
             req.body.visibilidade = req.body.visibilidade ? false : true
 
@@ -251,6 +251,7 @@ router.post('/editar/:id', function(req, res){
                 .catch((error) => res.render("error", { error }))
 
         }
+        else console.log("Oops")
 
     }
 

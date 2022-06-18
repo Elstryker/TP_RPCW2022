@@ -97,7 +97,7 @@ block content
                                         - classif = 0
                                 
                     .pubDownload
-                        button.w3-button.w3-large.w3-amber.w3-border.w3-border-white.w3-round-large(style="width:100px") Editar 
+                        button.w3-button.w3-large.w3-amber.w3-border.w3-border-white.w3-round-large(style="width:100px",onclick=`document.getElementById('${"edit_"+p._id}').style.display='block'`) Editar 
                         p
                         button.w3-button.w3-large.w3-red.w3-border.w3-border-white.w3-round-large(style="width:100px") Apagar
             p
@@ -115,3 +115,37 @@ block content
 
                         button(class="w3-btn w3-red" onclick=`document.getElementById('${"comment_"+p._id}').style.display='none'`) Cancelar
                         p
+
+            .w3-modal(id='edit_'+p._id)
+                each r in recursos.dados
+                    if p.idRecurso == r._id
+                        form.w3-modal-content.w3-animate-top.w3-round-large(action="/recursos/editar/"+p.idRecurso method="POST")
+                            .w3-container.w3-teal
+                                span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"edit_"+p._id}').style.display='none'`) &times;
+                                h2= "Editar " + r.titulo  
+                            .w3-container
+                                .w3-row.w3-section
+                                    div(class="w3-col", style="width: 50px")
+                                        p Titulo:
+                                    div.w3-rest
+                                        input.w3-input.w3-border(type="text" name="titulo" id="titulo" placeholder="Titulo" value=r.titulo required)
+                                .w3-row.w3-section
+                                    div(class="w3-col", style="width: 50px")
+                                        p Desc:
+                                    div.w3-rest
+                                        input.w3-input.w3-border(type="text" name="descricao" id="descricao" placeholder="Descrição" value=r.descricao)
+                                .w3-row.w3-section
+                                    div(class="w3-col", style="width: 50px")
+                                        p Tipo:
+                                    div.w3-rest
+                                        input.w3-input.w3-border(type="text" name="tipo" id="tipo" placeholder="Tipo" value=r.tipo required)
+                                .w3-row.w3-section
+                                    div.w3-rest
+                                        p(style='display: inline') Publico:
+                                        input.w3-check(type='checkbox',id="visibilidade")
+
+                                
+                                button(type="submit" class="w3-btn w3-teal w3-block w3-section") Comentar
+
+                                button(class="w3-btn w3-red" onclick=`document.getElementById('${"edit_"+p._id}').style.display='none'`) Cancelar
+                                p

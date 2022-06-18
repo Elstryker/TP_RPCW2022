@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var perfilRouter = require('./routes/perfil');
 var recursosRouter = require('./routes/recursos');
 var publicacoesRouter = require('./routes/publicacoes');
+var noticiasRouter = require('./routes/noticias');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/users', usersRouter);
 app.use('/perfil', perfilRouter);
 app.use('/recursos', recursosRouter);
 app.use('/publicacoes', publicacoesRouter);
+app.use('/noticias', noticiasRouter);
 
 
 // catch 404 and forward to error handler
