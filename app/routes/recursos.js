@@ -261,6 +261,7 @@ router.post('/editar/:id', function (req, res) {
                 .catch((error) => res.render("error", { error }))
 
         }
+        else res.status(401).render("error", { error: err });
 
     }
 
