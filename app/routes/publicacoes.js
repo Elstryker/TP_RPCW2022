@@ -88,8 +88,7 @@ router.post('/apagar/:id', function(req, res) {
                                     .then(dados => res.redirect("/recursos"))
                                     .catch(error => res.render('error', {error}))
                                 }
-                                
-
+                            
 }})
 
 

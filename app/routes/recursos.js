@@ -192,18 +192,13 @@ router.post("/file", upload.single("file"), async function (req, res) {
 });
 
 
-//Alterar um recurso!!
 router.post('/editar/:id', function (req, res) {
     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res)
     else {
         var token = aux.unveilToken(req.cookies.token)
-        console.log("teste")
-        // O req.body recebe cenas de um form c a edição do recurso.
-
-        // os nomes do body têm de ter os mesmos que o recurso! Confirmar nos models ao criar o formulário para a alteração!! // TODO:TOnecas!
 
         //verifica que é mesmo o autor antes de avançar com a edição
-        if ((token.nivel == 'produtor' || token.nivel == 'admin'))/*&& token._id == req.body.idAutor)*/ { // TODO: Perceber o porquê disto aqui
+        if ((token.nivel == 'produtor' || token.nivel == 'admin'))/*&& token._id == req.body.idAutor)*/{ //TODO: Confirmar isto
 
             req.body.visibilidade = (req.body.visibilidade == 'on')
 
@@ -213,48 +208,42 @@ router.post('/editar/:id', function (req, res) {
             axios.post('http://localhost:10000/api/recursos/editar/' + req.params.id + '?token=' + req.cookies.token, req.body)
                 .then(rec => {
                     
-                    if (req.body.visibilidade) {
+                    
+                    var noticiaObj = {
+                        idAutor: token._id,
+                        nomeAutor: token.username,
+                        recurso: {
+                            id: req.params.id,
+                            titulo: req.body.titulo,
+                            tipo: req.body.tipo,
+                            estado: 'Atualizado'
+                        },
+                        data: new Date().toISOString().substr(0, 19)
+                    }
 
-                        var noticiaObj = {
-                            idAutor: token._id,
-                            nomeAutor: token.username,
-                            recurso: {
-                                id: req.params.id,
-                                titulo: req.body.titulo,
-                                tipo: req.body.tipo,
-                                estado: 'Atualizado'
-                            },
-                            data: new Date().toISOString().substr(0, 19)
-                        }
+                    axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
+                        .then(n => {
 
-                        axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
-                            .then(n => {
+                            if (req.body.visibilidade) {
                                 axios.post('http://localhost:10000/api/publicacoes/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { visRecurso: true })
-                                    .then(p => {
-                                        res.redirect('/recursos/' + req.params.id)
-                                    })
-                                    .catch(error => res.render('error', { error }))
-                            })
-                            .catch(error => res.render('error', { error }))
-                    }
-                    else {
-                        axios.post('http://localhost:10000/api/noticias/atualizarEstado?token=' + req.params.id + '?token=' + req.cookies.token, { estado: 'Privado' })
-                            .then(n => {
+                                .then(p => {
+                                    res.redirect('/recursos/' + req.params.id)
+                                })
+                                .catch(error => res.render('error', { error }))
+                            }
+                            else {
                                 axios.post('http://localhost:10000/api/publicacoes/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { visRecurso: false })
-                                    .then(p => {
-                                        res.redirect('/recursos/' + req.params.id)
-                                    })
-                                    .catch(error => res.render('error', { error }))
-                            })
-                            .catch(error => res.render('error', { error }))
-                    }
-
-
+                                .then(p => {
+                                    res.redirect('/recursos/' + req.params.id)
+                                })
+                                .catch(error => res.render('error', { error }))
+                            }
+                        })
+                        .catch(error => res.render('error', { error }))
                 })
                 .catch((error) => res.render("error", { error }))
 
         }
-        else console.log("Oops")
 
     }
 
