@@ -44,8 +44,6 @@ router.post('/comentar/:id', function(req, res) {
             var dataAtual = new Date().toISOString().substr(0, 19);
             axios.post('http://localhost:10000/api/publicacoes/comentar/' + req.params.id + '?token=' + req.cookies.token, req.body)
                         .then(pubComentada => {
-                            //console.log("PUBCOMENTADA: !!!")
-                            //console.log(pubComentada.data)
                             var idRecurso = pubComentada.data.idRecurso
                             
                             axios.get('http://localhost:10000/api/recursos/'+ idRecurso + '?token=' + req.cookies.token)

@@ -64,21 +64,4 @@ router.post('/registo', passport.authenticate('signup-auth'), function(req, res)
   })
 
 
-// router.post('/login', passport.authenticate('login-authentication'), function (req, res) {
-//   jwt.sign({
-//     _id: req.user.user._id,
-//     username: req.user.user.username,
-//     nivel: req.user.user.nivel,
-//     sub: 'TP_RPCW2022'
-//   },
-//     "TP_RPCW2022",
-//     { expiresIn: "1d" },
-//     function (e, token) {
-//       if (e) res.status(500).jsonp({ error: "Erro na geração do token: " + e })
-//       else res.status(201).jsonp({ token })
-//     })
-
-// })
-
-
 module.exports = router;

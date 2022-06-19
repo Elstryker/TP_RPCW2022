@@ -73,13 +73,7 @@ passport.serializeUser((user,done) => {
     }
     else done(null, user)
 })
-/*
-// Indica-se ao passport como serializar o utilizador
-passport.serializeUser((user, done) => {
-  console.log('Serialização, email: ' + user.user.email)
-  done(null, user.user.username)
-})
-*/
+
 // Desserialização: a partir do id obtem-se a informação do utilizador
 passport.deserializeUser((user, done) => {
     if (user.success) {

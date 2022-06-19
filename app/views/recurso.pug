@@ -140,23 +140,3 @@ block content
                 button(type="submit" class="w3-btn w3-teal w3-block w3-section") Classificar
 
                 button(class="w3-btn w3-red" onclick=`document.getElementById('${'rating_'+recurso.id}').style.display='none'`) Cancelar
-
-
-
-
-    //- Informação do recurso, e se o user é dono.
-
-
-    //- Em relação ao recurso, recebe esta informação:
-                recInfo["titulo"] = recurso.titulo
-                recInfo["tipo"] = recurso.tipo
-                recInfo["descricao"] = recurso.descricao
-                recInfo["classificacao"] = classif
-                recInfo["nomeAutor"] = recurso.nomeAutor
-                recInfo["idAutor"] = recurso.idAutor
-                recInfo["tamanho"] = recurso.tamanho / (1024 * 1024) //Conversão de bytes para mb.
-                recInfo["dataCriacao"] = recurso.dataCriacao
-                recInfo["dataRegisto"] = recurso.dataRegisto
-                recInfo["dataUltimaMod"] = recurso.dataUltimaMod //TODO: Testar isto das datas no frontend.
-                recInfo["ficheiros"] = recurso.ficheiros
-                recInfo["nrDownloads"] = recurso.nrDownloads

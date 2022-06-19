@@ -8,11 +8,9 @@ async function loadZipAndProcessIt(path) {
     var zip = new AdmZip(path)
 
     var extractPath = pathLib.join(__dirname,'/../uploads/')
-    //console.log("weee|"+extractPath)
     zip.extractAllTo(extractPath)
     var zipContents = zip.getEntries()
 
-    //console.log("LISTING EXTRACTED DIRECTORIES")
     fs.readdirSync(extractPath).forEach(file => console.log(file))
 
     var valid = true
@@ -20,8 +18,6 @@ async function loadZipAndProcessIt(path) {
     for (const entry of zipContents) {
         if(entry.name == 'manifest-md5.txt') {
             var manifestData = entry.getData().toString().split('\n')
-            
-            //console.log(manifestData)
 
             for(const data of manifestData) {
                 var sepData = data.split(' ')
@@ -30,14 +26,11 @@ async function loadZipAndProcessIt(path) {
                 let filePath = pathLib.join(extractPath,fileName)
 
                 var fileHash = await getMd5Hash(filePath)
-                //console.log(fileHash)
 
                 if(fileHash == sepData[0]) {
-                    //console.log("OMG são iguais!")
                     files.push(fileName)
                 }
                 else {
-                    //console.log("WTF is that")
                     valid = false
                 }
 
@@ -61,7 +54,6 @@ async function loadZipAndProcessIt(path) {
             filePath=pathLib.join(filePath,fileName)
             
             var newPath = directoryPath + realName
-            //console.log("\n\n\n\n\n\n\n"+filePath)
             fs.renameSync(filePath, newPath)
             returnFiles.push('/' + d + '/' + realName)
         }
