@@ -42,7 +42,23 @@ block content
                                     a(style='display: inline' href="/perfil/"+n.idAutor)= n.nomeAutor
                                     p(style='display: inline')=` ${acao} o recurso ${n.recurso.titulo}`
 
-        h1  Publicações 
+        h1  Publicações
+        p Filtrar por:
+            .w3-container.w3-margin
+                .w3-container.w3-border.w3-left-align
+                    b Tipo:                        
+                    input.w3-input.w3-border.w3-light-grey(type="text" id="filtrarTipo" name="tipo" placeholder="Tipo")
+                    br
+                    b Título: 
+                    input.w3-input.w3-border.w3-light-grey(type="text" id="filtrarTitulo" name="titulo" placeholder="Titulo")
+                    br
+                    button.w3-button.w3-border(id='botaoFiltrar') Filtrar
+                    p
+                    button.w3-button.w3-border(id='botaoLimparFiltro') Limpar Filtro
+                    br
+                    br
+                    
+        br
         each p in pubs
             if p.visRecurso
                 .w3-round-large.w3-teal(style='width:90%;')
