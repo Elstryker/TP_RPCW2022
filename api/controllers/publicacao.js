@@ -23,12 +23,12 @@ module.exports.addComentario = (id, com) => {
         )
 }
 
-module.exports.atualizarEstado = (idRecurso, estado) => {
-    console.log(estado,idRecurso)
+module.exports.atualizarEstado = (idRecurso, r) => {
+    console.log(r,idRecurso)
     return Publicacao
         .findOneAndUpdate(
             {idRecurso : idRecurso},
-            {$set: {visRecurso: estado}},
+            {$set: {visRecurso: r.visRecurso,titulo:r.titulo,descricao:r.descricao,dataModificacao:r.dataUltimaMod}},
             {useFindAndModify: false, new: true}
         ).exec()
 }
@@ -55,3 +55,6 @@ module.exports.remover = function (id) {
     return Publicacao.deleteOne({ _id: id });
   };
   
+module.exports.editarPorRecurso = function (id,r) {
+    return Publicacao.findByIdAndUpdate({idRecurso : id}, r, { new: true })
+};

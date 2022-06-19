@@ -70,7 +70,12 @@ router.post("/inc/:id", function (req, res) {
 router.post('/editar/:id', function (req, res) {
     Recurso.editar(req.params.id,req.body)
         .then(dados => {
-            Publicacao.atualizarEstado(req.params.id,req.body.visibilidade)
+            Publicacao.atualizarEstado(req.params.id,{
+               titulo:req.body.titulo,
+               descricao: req.body.descricao,
+               visRecurso: req.body.visibilidade, 
+               dataUltimaMod: req.body.dataUltimaMod
+            })
             res.status(201).jsonp({ dados })})
         .catch((e) => res.status(511).jsonp({ error: e }))
 })
