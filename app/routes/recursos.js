@@ -58,6 +58,7 @@ router.get('/:id', function (req, res) {
                 if (!classif.length) classif = 0
                 else classif.reduce((total, prox) => total + prox.rating, 0) / classif.length
 
+                recInfo["id"] = recurso._id
                 recInfo["titulo"] = recurso.titulo
                 recInfo["tipo"] = recurso.tipo
                 recInfo["descricao"] = recurso.descricao
@@ -75,7 +76,7 @@ router.get('/:id', function (req, res) {
                     .then(dados => {
                         var pub = dados.data
                         var comentarios = pub.comments
-                        res.render('recurso', {recurso: recInfo, dono, comentarios: comentarios})
+                        res.render('recurso', {recurso: recInfo, dono, comentarios: comentarios,pubId: pub._id})
                     })
                     .catch(error => res.render('error', {error}))
 
