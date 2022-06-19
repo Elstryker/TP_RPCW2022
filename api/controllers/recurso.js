@@ -49,14 +49,8 @@ module.exports.pesquisarMeusRecursos = (idAutor) => {
 
 // pesquisar recursos por autor
 module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
-  var nomeAutor = { $regex: nome, $options: "i" };
-  var matchObj;
-
-  if (meus_recursos) matchObj = { idAutor: meus_recursos, nomeAutor };
-  else matchObj = { nomeAutor };
-
   return Recurso.aggregate([
-    { $match: matchObj },
+    { $match: nomeAutor },
     {
       $project: {
         _id: 1,
@@ -75,15 +69,9 @@ module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
 };
 
 // pesquisar recursos por título
-module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
-  var titulo = { $regex: titulo, $options: "i" };
-  var matchObj;
-
-  if (meus_recursos) matchObj = { idAutor: meus_recursos, titulo };
-  else matchObj = { titulo };
-
+module.exports.pesquisarPorTitulo = (titulo) => {
   return Recurso.aggregate([
-    { $match: matchObj },
+    { $match: {titulo:{$regex: ".*"+titulo+".*"}} },
     {
       $project: {
         _id: 1,
@@ -102,15 +90,9 @@ module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
 };
 
 // pesquisar recursos por tipo
-module.exports.pesquisarPorTipo = (tipo, meus_recursos) => {
-  var tipo = { $regex: tipo, $options: "i" };
-  var matchObj;
-
-  if (meus_recursos) matchObj = { idAutor: meus_recursos, tipo };
-  else matchObj = { tipo };
-
+module.exports.pesquisarPorTipo = (tipo) => {
   return Recurso.aggregate([
-    { $match: matchObj },
+    { $match: {tipo: tipo} },
     {
       $project: {
         _id: 1,

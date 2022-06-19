@@ -85,28 +85,48 @@ function groupAndSortByDate(list) {
     return orderedDates
 }
 
-function renderIndex(cookiesToken, res, atribs) {
+function renderIndex(cookiesToken, res, req, atribs) {
     var token = unveilToken(cookiesToken)
+    var url = ""
 
-    axios.get('http://localhost:10000/api/publicacoes?token=' + cookiesToken)
-        .then(pubs => {
-            var publicacoes = pubs.data
+    if(Object.keys(req.query).length != 0){
+        var query = Object.keys(req.query)[0]
+        
+        url = query + '=' + req.query[query]
+    }
+    else {
+        url = ""
+    }
 
-            axios.get('http://localhost:10000/api/noticias/index?token=' + cookiesToken)
-                .then(noticias => {
-                    var noticias = noticias.data
-                    var id = token._id
-
-                    axios.get('http://localhost:10000/api/recursos?token=' + cookiesToken)
-                        .then(recursos => {
-                            var recs = recursos.data;
-                            res.render('index', { nivel: token.nivel, id, nome: token.username, pubs: publicacoes, noticias: noticias, recursos: recs, ...atribs })
+    axios.get('http://localhost:10000/api/recursos?token=' + cookiesToken +"&"+url)
+                    .then(recursos => {
+                        var recs = recursos.data;
+                        let promessas = []
+                        recs.forEach(rec => {
+                            promessas.push(axios.get('http://localhost:10000/api/publicacoes/recurso/' + rec._id + '?token=' +cookiesToken))
                         })
-                })
-                .catch(error => res.render('error', { error }))
-        })
-        .catch(error => res.render('error', { error }))
+                        
+                        Promise.all(promessas)
+                            .then(dados => {
+                                let pubs = []
+                                dados.forEach(pub => {
+                                    if(pub.data != null)
+                                        pubs.push(pub.data)
+                                })
+
+                                axios.get('http://localhost:10000/api/noticias/index?token=' + cookiesToken)
+                                    .then(noticias => {
+                                        var noticias = noticias.data
+                                        var id = token._id
+                                        res.render('index', { nivel: token.nivel, id, nome: token.username, pubs: pubs, noticias: noticias, recursos: recs, ...atribs })
+                                    })
+                                    .catch(error => res.render('error', { error }))
+                            })
+                            .catch(error => res.render('error', { error }))
+                        })
+                        .catch(error => res.render('error', { error }))
 }
+
 
 function zipRecurso(ficheiros) {
     var zip = new AdmZip()

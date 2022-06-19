@@ -1,26 +1,26 @@
 var express = require("express");
 var router = express.Router();
 const Recurso = require("../controllers/recurso");
-const TipoRecurso = require("../controllers/tipoRecurso");
 const Publicacao = require('../controllers/publicacao');
 
 
 router.get("/", function (req, res, next) {
     if (req.query.tipo) {
-        Recurso.pesquisarPorTipo(req.query.tipo, req.body.meus_recursos)
+        Recurso.pesquisarPorTipo(req.query.tipo)
             .then((dados) => res.status(201).jsonp(dados))
             .catch((e) => res.status(508).jsonp({ error: e }));
-    } else if (req.query.a) {
-        Recurso.pesquisarPorTitulo(req.query.a, req.body.meus_recursos)
+    } else if (req.query.q) {
+        Recurso.pesquisarPorTitulo(req.query.q)
             .then((dados) => res.status(201).jsonp(dados))
             .catch((e) => res.status(509).jsonp({ error: e }));
     }
-    Recurso.listar()
+    else {Recurso.listar()
         .then((dados) => res.status(200).jsonp(dados))
         .catch((e) => {
             console.log(e);
             res.status(501).jsonp({ error: e });
         });
+    }
 });
 
 router.get("/:rid", function (req, res) {

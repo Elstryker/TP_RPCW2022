@@ -19,7 +19,7 @@ router.post('/registo', function(req, res) {
                 res.redirect('/')
             }
             else {
-                aux.renderIndex(req.cookies.token, res, {
+                aux.renderIndex(req.cookies.token, res,req, {
                                     invalidSField: dados.data.invalidInput, 
                                     ...req.body,
                                     error_msg: dados.data.error})
@@ -58,7 +58,7 @@ router.post('/login', function(req, res) {
                 res.redirect('/')
             }
             else {
-                aux.renderIndex(req.cookies.token, res, {
+                aux.renderIndex(req.cookies.token, res, req, {
                     invalidLField: dados.data.invalidInput, 
                     ...req.body,
                     error_msg: dados.data.error})
