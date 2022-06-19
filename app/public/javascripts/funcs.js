@@ -94,3 +94,4 @@ function previewFicheiro(nome, path, tipo_mime){
   $('#preview_ficheiro').append(file);
   $('#preview_ficheiro').modal();
 }
+
