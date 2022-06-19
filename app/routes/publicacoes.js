@@ -40,8 +40,6 @@ router.post('/comentar/:id', function(req, res) {
             req.body["idUser"] = token._id
             req.body["username"] = token.username
             req.body["commentDate"] = new Date().toISOString().substr(0,19)
-            //console.log("COMENTÁRIO ADICIONADO!!!")
-            //console.log(req.body)
 
             var dataAtual = new Date().toISOString().substr(0, 19);
             axios.post('http://localhost:10000/api/publicacoes/comentar/' + req.params.id + '?token=' + req.cookies.token, req.body)
@@ -74,6 +72,9 @@ router.post('/comentar/:id', function(req, res) {
                                 .catch(error => res.render('error', {error}))
                         })
                         .catch(error => res.render('error', {error}))
+        }
+        else if (token.nivel == 'consumidor'){
+            res.render('error', {error, mensagem: "Não lhe é possível comentar uma publicação porque não possui uma conta. Registe-se / faça login para isso."})
         }
     }
 })
@@ -115,7 +116,11 @@ router.post('/apagar/:id', function(req, res) {
                                             .catch(error => res.render('error', {error}))
                                     })
                                     .catch(error => res.render('error', {error}))
-                                }
+        }
+        else if (token.nivel == 'consumidor'){
+            res.render('error', {mensagem: "Não lhe é possível apagar uma publicação. Registe-se / faça login para isso."})
+        }
+            
                             
 }})
 

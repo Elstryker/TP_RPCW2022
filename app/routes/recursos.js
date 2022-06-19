@@ -18,8 +18,6 @@ const { token } = require("morgan");
 
 
 
-
-
 var upload = multer({ dest: "uploads/" });
 
 router.get("/", function (req, res) {
@@ -40,7 +38,6 @@ router.get("/", function (req, res) {
     }
 });
 
-//TODO: Tonecas. Testar isto, em princípio funfa.
 router.get('/:id', function (req, res) {
     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res)
     else {
@@ -49,8 +46,6 @@ router.get('/:id', function (req, res) {
             .then(dados => {
                 var recInfo = {}
                 var recurso = dados.data
-
-                console.log(recurso)
 
                 var dono = token._id == recurso.idAutor || token.nivel == 'admin'
                 var classif = recurso.ratings
@@ -68,7 +63,7 @@ router.get('/:id', function (req, res) {
                 recInfo["tamanho"] = recurso.tamanho / (1024 * 1024) //Conversão de bytes para mb.
                 recInfo["dataCriacao"] = recurso.dataCriacao
                 recInfo["dataRegisto"] = recurso.dataRegisto
-                recInfo["dataUltimaMod"] = recurso.dataUltimaMod //TODO: Testar isto das datas no frontend.
+                recInfo["dataUltimaMod"] = recurso.dataUltimaMod
                 recInfo["ficheiros"] = recurso.ficheiros
                 recInfo["nrDownloads"] = recurso.nrDownloads
 
@@ -120,8 +115,6 @@ router.post("/file", upload.single("file"), async function (req, res) {
         var dataRecurso = req.body.dataCriacao;
 
         var visibilidadeRecurso = (req.body.visibilidade == "on")
-
-        //console.log(req.body);
 
         var filesList = [];
 
@@ -259,25 +252,10 @@ router.post('/editar/:id', function (req, res) {
                 .catch((error) => res.render("error", { error }))
 
         }
-        else res.status(401).render("error", { error: err });
+        else res.status(401).render("error", {mensagem: "Não lhe é possível editar uma publicação porque não possui uma conta. Registe-se / faça login para isso."});
 
     }
 
-})
-
-//TODO: TonecaS: Esta função tira os recursos de um autor. Mas não está 100 acabada.
-
-// Acho que nao vai ser usada, é se quisermos fazer um extra, basicamente xD 
-
-// Funcao que dá os recursos de um autor! o id é o idAutor!
-router.get('/autor/:id', function (req, res, next) {
-    if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res);
-    else {
-        axios.get('http://localhost:10000/api/recursos/autor/' + req.params.id + '?token=' + req.cookies.token)
-            .then(dados => {
-                res.render('recursos', dados.data)
-            })
-    }
 })
 
 // Classificar um recurso!
@@ -313,7 +291,7 @@ router.post('/classificar/:id', (req, res) => {
                 })
                 .catch(error => res.render('error', { error }))
         }
-        else res.redirect('/recursos/' + req.params.id)
+        else res.render('error', {mensagem: "Não lhe é possível classificar uma publicação porque não possui uma conta. Registe-se / faça login para isso."})
     }
 })
 
@@ -348,24 +326,5 @@ router.get("/download/:id", (req, res) => {
             .catch((error) => res.render("error", { error }));
     }
 });
-
-
-// Para remover recursos!! 
-// router.get('/:id/remover', (req, res) => {
-//     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res);
-//     else {
-//         axios.delete('http://localhost:10000/recursos/' + req.params.id + '?token=' + req.cookies.token)
-//             .then(dados => {
-//                 axios.post('http://localhost:10000/noticias/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { estado: 'Eliminado' })
-//                     .then(d => {
-//                         axios.post('http://localhost:10000/publicacoes/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { visRecurso: false })
-//                             .then(d2 => res.redirect('/recursos'))
-//                             .catch(error => res.render('error', { error }))
-//                     })
-//                     .catch(error => res.render('error', { error }))
-//             })
-//             .catch(error => res.render('error', { error }))
-//     }
-// })
 
 module.exports = router;
