@@ -74,7 +74,6 @@ router.get('/:id', function (req, res) {
                 axios.get('http://localhost:10000/api/publicacoes/recurso/' + recurso._id + '?token=' + req.cookies.token)
                     .then(dados => {
                         var pub = dados.data
-
                         var comentarios = pub.comments
                         res.render('recurso', {recurso: recInfo, dono, comentarios: comentarios})
                     })
@@ -121,7 +120,7 @@ router.post("/file", upload.single("file"), async function (req, res) {
 
         var visibilidadeRecurso = (req.body.visibilidade == "on")
 
-        console.log(req.body);
+        //console.log(req.body);
 
         var filesList = [];
 
@@ -129,10 +128,6 @@ router.post("/file", upload.single("file"), async function (req, res) {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 var fileActualPath = pathLib.normalize(__dirname.replace("/routes", "/public/files" + file));
-                // fs.stat(fileActualPath, (error, stats) => {
-                //     console.log(stats);
-                //     console.log("???" + fileActualPath)
-                // });
 
                 var fileObj = {
                     creationDate: creationDates[i],
@@ -141,11 +136,10 @@ router.post("/file", upload.single("file"), async function (req, res) {
                     submitter: token.nivel,
                     title: titles[i],
                     mimetype: mime.lookup(fileActualPath),
-                    size: fs.lstatSync(fileActualPath).size, //TODO: Não funciona!!!! 
+                    size: fs.lstatSync(fileActualPath).size,
                     path: file,
                 };
 
-                //console.log(fileActualPath);
                 filesList.push(fileObj);
             }
             var dataAtual = new Date().toISOString().substr(0, 19);
@@ -167,41 +161,38 @@ router.post("/file", upload.single("file"), async function (req, res) {
                 .then(recurso => {
                     var novoRecurso = recurso.data.dados
 
-                    if (visibilidadeRecurso) {
-
-                        pubObj = {
-                            titulo: tituloRecurso,
-                            descricao: descRecurso,
-                            idAutor: token._id,
-                            nomeAutor: token.username,
-                            idRecurso: novoRecurso._id,
-                            dataCriacao: dataRecurso,
-                            visRecurso: novoRecurso.visibilidade
-                        }
-
-                        axios.post('http://localhost:10000/api/publicacoes?token=' + req.cookies.token, { pub: pubObj })
-                            .then(pub => {
-
-                                var noticiaObj = {
-                                    idAutor: token._id,
-                                    nomeAutor: token.username,
-                                    recurso: {
-                                        id: novoRecurso._id,
-                                        titulo: novoRecurso.titulo,
-                                        tipo: novoRecurso.tipo,
-                                        estado: 'Novo'
-                                    },
-                                    data: dataAtual
-                                }
-
-                                axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
-                                    .then(dados => res.redirect('/recursos'))
-                                    .catch(error => res.render('error', { error }))
-                            
-                            })
-                            .catch((error) => res.render("error", { error }))
-
+                    pubObj = {
+                        titulo: tituloRecurso,
+                        descricao: descRecurso,
+                        idAutor: token._id,
+                        nomeAutor: token.username,
+                        idRecurso: novoRecurso._id,
+                        dataCriacao: dataRecurso,
+                        visRecurso: novoRecurso.visibilidade
                     }
+
+                    axios.post('http://localhost:10000/api/publicacoes?token=' + req.cookies.token, { pub: pubObj })
+                        .then(pub => {
+
+                            var noticiaObj = {
+                                idAutor: token._id,
+                                nomeAutor: token.username,
+                                recurso: {
+                                    id: novoRecurso._id,
+                                    titulo: novoRecurso.titulo,
+                                    tipo: novoRecurso.tipo,
+                                    estado: 'Novo'
+                                },
+                                visibilidade: novoRecurso.visibilidade,
+                                data: dataAtual
+                            }
+
+                            axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
+                                .then(dados => res.redirect('/recursos'))
+                                .catch(error => res.render('error', { error }))
+                        
+                        })
+                        .catch((error) => res.render("error", { error }))
 
                 })
                 .catch((error) => res.render("error", { error }));
@@ -230,6 +221,7 @@ router.post('/editar/:id', function (req, res) {
             axios.post('http://localhost:10000/api/recursos/editar/' + req.params.id + '?token=' + req.cookies.token, req.body)
                 .then(rec => {
                     
+                    console.log(rec.data);
                     var noticiaObj = {
                         idAutor: token._id,
                         nomeAutor: token.username,
@@ -239,6 +231,7 @@ router.post('/editar/:id', function (req, res) {
                             tipo: req.body.tipo,
                             estado: 'Atualizado'
                         },
+                        visibilidade: req.body.visibilidade,
                         data: new Date().toISOString().substr(0, 19)
                     }
 
@@ -307,6 +300,7 @@ router.post('/classificar/:id', (req, res) => {
                             tipo: recurso.tipo,
                             estado: 'Classificado'
                         },
+                        visibilidade: recurso.visibilidade,
                         data: new Date().toISOString().substr(0, 19)
                     }
                     //console.log(noticiaObj)

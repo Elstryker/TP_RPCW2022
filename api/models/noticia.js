@@ -9,6 +9,7 @@ var noticiaSchema = new mongoose.Schema({
     tipo: {type: String, required: true},
     estado: {type: String, required: true}
   }, required: true},
+  visibilidade: {type: Boolean, required: true},
   data: {type: String, required: true}
 });
 

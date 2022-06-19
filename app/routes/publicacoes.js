@@ -63,6 +63,7 @@ router.post('/comentar/:id', function(req, res) {
                                             tipo: rec.tipo,
                                             estado: 'Comentado'
                                         },
+                                        visibilidade: rec.visibilidade,
                                         data: dataAtual
                                     }
 
@@ -85,7 +86,34 @@ router.post('/apagar/:id', function(req, res) {
 
         if (token.nivel == 'produtor' || token.nivel == 'admin') {
             axios.delete('http://localhost:10000/api/publicacoes/' + req.params.id + '?token=' + req.cookies.token, req.body)
-                                    .then(dados => res.redirect("/recursos"))
+                                    .then(dados => {
+
+                                        var pub = dados.data
+                                        var dataAtual = new Date().toISOString().substr(0, 19);
+
+                                        axios.delete('http://localhost:10000/api/recursos/'+ pub.idRecurso+'?token=' + req.cookies.token)
+                                            .then(rec => {
+                                                var recurso = rec.data
+                                                var noticiaObj = {
+                                                    idAutor: recurso.idAutor,
+                                                    nomeAutor: recurso.nomeAutor,
+                                                    recurso: {
+                                                        id: recurso._id,
+                                                        titulo: recurso.titulo,
+                                                        tipo: recurso.tipo,
+                                                        estado: 'Apagado'
+                                                    },
+                                                    visibilidade: true,
+                                                    data: dataAtual
+                                                }
+
+                                                axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, {noticia: noticiaObj})
+                                                .then(dados => res.redirect("/recursos/"))
+                                                .catch(error => res.render('error', {error}))
+
+                                            })
+                                            .catch(error => res.render('error', {error}))
+                                    })
                                     .catch(error => res.render('error', {error}))
                                 }
                             
