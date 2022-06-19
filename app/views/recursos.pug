@@ -34,6 +34,10 @@ block content
                                 input(type='date', name='dataCriacao' id="dataCriacao")
                     .w3-row.w3-section
                         div.w3-rest
+                            p(style='display: inline') Publico:
+                            input.w3-check(type='checkbox',id="visibilidade",name="visibilidade")
+                    .w3-row.w3-section
+                        div.w3-rest
                             label(for='form-title') Título
                             input.file-title(type='text', name='title', id='tituloRecurso' class='file-title' placeholder='Título')
                             br
@@ -77,7 +81,7 @@ block content
                     .pubButtons
                         button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"comment_"+p._id}').style.display='block'`) Comentar
                         p
-                        button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large Download
+                        a(href="/recursos/download/"+p.idRecurso).button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large Download
                         p
                     .pubRating
                         each r in recursos.dados

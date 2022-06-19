@@ -102,7 +102,7 @@ router.post("/file", upload.single("file"), async function (req, res) {
         var tipoRecurso = req.body.tipoRecurso;
         var dataRecurso = req.body.dataCriacao;
 
-        var visibilidadeRecurso = true; //TODO: TONECAS: alterar
+        var visibilidadeRecurso = (req.body.visibilidade == "on")
 
         var filesList = [];
 
@@ -208,6 +208,7 @@ router.post('/editar/:id', function (req, res) {
             req.body.visibilidade = (req.body.visibilidade == 'on')
 
             req.body["dataUltimaMod"] = new Date().toISOString().substr(0, 19);
+            console.log(req.body)
 
             axios.post('http://localhost:10000/api/recursos/editar/' + req.params.id + '?token=' + req.cookies.token, req.body)
                 .then(rec => {
