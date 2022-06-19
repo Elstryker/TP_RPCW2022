@@ -47,8 +47,13 @@ block content
                                         li= "Tipo MIME: " + f["mimetype"]
                                         li= "Tamanho: " + f["size"]
                         li
-                            -var classifs = recurso["classificacao"].map(function(c){return c.rating;})
-                            -var classif = classifs.reduce((a,b)=> a+b,0)/classifs.length
+                            if recurso["classificação"]
+                                -var classifs = recurso["classificacao"].map(function(c){return c.rating;})
+                                -var classif = classifs.reduce((a,b)=> a+b,0)/classifs.length
+                                -var average = classif
+                            else 
+                                - classif = 0
+                                - average = 0
                             -var i = 5
                             
                             while i>0
@@ -61,7 +66,9 @@ block content
                                 else
                                     span.fa.fa-star-half-o.checked
                                     - classif = 0
-                    
+
+                            p(style='display: inline')= `(${average}) `
+
                                 
     .w3-modal(id='comment_'+recurso.id)
                         form.w3-modal-content.w3-animate-top.w3-round-large(action="/publicacoes/comentar/"+pubId method="POST")
