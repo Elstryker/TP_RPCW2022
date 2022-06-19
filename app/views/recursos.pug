@@ -86,7 +86,7 @@ block content
                     .pubRating
                         each r in recursos.dados
                             if r._id == p.idRecurso
-                                -var classif = r.ratings
+                                -var classif = parseFloat(r.ratings)
                         
                                 -var i = 5
                                 
