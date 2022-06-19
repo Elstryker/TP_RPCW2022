@@ -26,6 +26,8 @@ html
 				a.w3-bar-item.w3-button(href='/recursos') Recursos
 				a.w3-bar-item.w3-button(href='/perfil') Perfil
 				a.w3-bar-item.w3-button.w3-right(href="/users/logout") Logout
+				if nome
+					a.w3-bar-item.w3-button.w3-right= `Bem vindo ${nome}!`
 
 		.w3-modal(id='modalLogin' style=invalidLField ? "display: block" : "display: none")
 			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/login" method="POST")

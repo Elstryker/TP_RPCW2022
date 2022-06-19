@@ -30,7 +30,7 @@ router.get("/", function (req, res) {
                 axios.get(`http://localhost:10000/api/recursos/autor/${token._id}?token=` + req.cookies.token)
                     .then(recursos => {
                         var recs = recursos.data;
-                        res.render('recursos', { nivel: token.nivel, id: token._id, pubs: publicacoes, recursos: recs })
+                        res.render('recursos', { nivel: token.nivel, nome: token.username,  id: token._id, pubs: publicacoes, recursos: recs })
                     }).catch(error => res.render('error', { error }))
             })
             .catch(error => res.render('error', { error }))
@@ -71,7 +71,7 @@ router.get('/:id', function (req, res) {
                     .then(dados => {
                         var pub = dados.data
                         var comentarios = pub.comments
-                        res.render('recurso', {recurso: recInfo, dono, comentarios: comentarios,pubId: pub._id})
+                        res.render('recurso', {recurso: recInfo, dono, comentarios: comentarios,pubId: pub._id, nome: token.username})
                     })
                     .catch(error => res.render('error', {error}))
 

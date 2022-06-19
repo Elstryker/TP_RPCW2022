@@ -26,6 +26,7 @@ router.get("/:id", function (req, res, next) {
                     var dono = req.params.id == token._id || token.nivel == "admin";
                     res.render("perfil", {
                     nivel: token.nivel,
+                    nome: token.username,
                     dono: dono,
                     user: user.data,
                     noticias: noticias.data,

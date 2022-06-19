@@ -15,6 +15,7 @@ router.get('/', function(req,res) {
 
             res.render("noticias", {
                 id: token._id,
+                nome: token.username,
                 noticias: noticias.data,
                 });
 

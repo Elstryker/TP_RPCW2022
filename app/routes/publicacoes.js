@@ -15,13 +15,13 @@ router.get('/:id', function(req,res) {
             .then(dados => {
                 var visitante
                 if (token.nivel == 'consumidor') {
-                    res.render('publicacao', {publicacao: dados.data, nivel: token.nivel})
+                    res.render('publicacao', {publicacao: dados.data, nivel: token.nivel, nome: token.username})
                 }
                 else {
                     axios.get('http://localhost:10000/api/users/' + token._id + '?token=' + req.cookies.token)
                         .then(visitanteData => {
                             visitante = visitanteData.data
-                            res.render('publicacao', {publicacao: dados.data, nivel: token.nivel, visitante})
+                            res.render('publicacao', {publicacao: dados.data, nivel: token.nivel, visitante, nome: token.username})
                         })  
                         .catch(error => res.render('error', {error}))
                 }

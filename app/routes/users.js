@@ -83,7 +83,7 @@ router.get('/', function(req, res, next) {
                 delete u.password;
                 u.dataRegisto = moment(new Date(u.dataRegisto)).format('DD-MM-YYYY')
             });
-            res.render('users', {nivel: token.nivel, users: users.data})
+            res.render('users', {nivel: token.nivel, users: users.data, nome: token.username})
         })
         .catch(error => res.render('error', {error : error}))
     }

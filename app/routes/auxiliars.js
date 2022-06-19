@@ -100,7 +100,7 @@ function renderIndex(cookiesToken, res, atribs) {
                     axios.get('http://localhost:10000/api/recursos?token=' + cookiesToken)
                         .then(recursos => {
                             var recs = recursos.data;
-                            res.render('index', { nivel: token.nivel, id, pubs: publicacoes, noticias: noticias, recursos: recs, ...atribs })
+                            res.render('index', { nivel: token.nivel, id, nome: token.username, pubs: publicacoes, noticias: noticias, recursos: recs, ...atribs })
                         })
                 })
                 .catch(error => res.render('error', { error }))
