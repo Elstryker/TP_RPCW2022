@@ -6,7 +6,7 @@ block content
 
     center
 
-        h1  As minhas publicações
+        h1  As minhas Publicações
 
         button.w3-button.w3-xlarge.w3-blue-gray.w3-border.w3-border-white.w3-round-large(onclick="document.getElementById('addPub').style.display='block'") Adicionar Publicação
 
@@ -56,28 +56,29 @@ block content
 
 
 
-        h1  Publicações 
+        h1   
         each p in pubs
             .w3-round-large.w3-teal(style='width:90%;')
                 .publicacao
                     .pubInfo
                         ul.w3-ul
                             li
-                                p(style='display: inline') Titulo: 
+                                p(style='display: inline') Título: 
                                 a(style='display: inline' href="/recursos/"+p.idRecurso)= p.titulo
                             li= `Descrição: ${p.descricao}`
                             li
                                 p(style='display: inline') Publicador: 
                                 a(style='display: inline' href="/perfil/"+p.idAutor)= p.nomeAutor
-                            li= `Data Criação: ${p.dataCriacao}`
+                            li= `Data de Criação: ${p.dataCriacao}`
                             if p.dataModificacao
-                                li= `Data Modificacao: ${p.dataModificacao}`
+                                li= `Data de Modificacao: ${p.dataModificacao}`
                             else
                                 li 
                     .pubButtons
                         button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"comment_"+p._id}').style.display='block'`) Comentar
                         p
                         button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large Download
+                        p
                     .pubRating
                         each r in recursos.dados
                             if r._id == p.idRecurso
@@ -105,7 +106,7 @@ block content
                 form.w3-modal-content.w3-animate-top.w3-round-large(action="/publicacoes/comentar/"+p._id method="POST")
                     .w3-container.w3-teal
                         span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"comment_"+p._id}').style.display='none'`) &times;
-                        h2= "Adicionar comentário a " + p.titulo  
+                        h2= "Adicionar comentário a \"" + p.titulo + "\"" 
                     .w3-container
                         .w3-row.w3-section
                             div.w3-rest
