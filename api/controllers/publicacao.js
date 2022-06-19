@@ -24,12 +24,13 @@ module.exports.addComentario = (id, com) => {
 }
 
 module.exports.atualizarEstado = (idRecurso, estado) => {
-    return Publicacao.updateMany(
-        {"idRecurso": idRecurso},
-        [{ $set: {
-            'visRecurso': estado
-        }}],
-        {multi: true})
+    console.log(estado,idRecurso)
+    return Publicacao
+        .findOneAndUpdate(
+            {idRecurso : idRecurso},
+            {$set: {visRecurso: estado}},
+            {useFindAndModify: false, new: true}
+        ).exec()
 }
 
 module.exports.alterar = function(u) {

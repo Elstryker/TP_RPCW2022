@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 const Recurso = require("../controllers/recurso");
 const TipoRecurso = require("../controllers/tipoRecurso");
+const Publicacao = require('../controllers/publicacao');
+
 
 router.get("/", function (req, res, next) {
     if (req.query.tipo) {
@@ -67,7 +69,9 @@ router.post("/inc/:id", function (req, res) {
 
 router.post('/editar/:id', function (req, res) {
     Recurso.editar(req.params.id,req.body)
-        .then(dados => res.status(201).jsonp({ dados }))
+        .then(dados => {
+            Publicacao.atualizarEstado(req.params.id,req.body.visibilidade)
+            res.status(201).jsonp({ dados })})
         .catch((e) => res.status(511).jsonp({ error: e }))
 })
 

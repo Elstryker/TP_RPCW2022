@@ -65,6 +65,8 @@ block content
                             p= `Comentou o recurso ${n.recurso.titulo}`
                         else if n.recurso.estado == 'Classificado'
                             p= `Classificou o recurso ${n.recurso.titulo}`
+                        else if n.recurso.estado == 'Atualizado'
+                            p= `Editou o recurso ${n.recurso.titulo}`
 
             - left = !left
 
