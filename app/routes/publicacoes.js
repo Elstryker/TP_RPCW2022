@@ -67,7 +67,7 @@ router.post('/comentar/:id', function(req, res) {
                                     }
 
                                     axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, {noticia: noticiaObj})
-                                    .then(dados => res.redirect("/publicacoes/"+pubComentada.data._id))
+                                    .then(dados => res.redirect("/recursos/"+idRecurso))
                                     .catch(error => res.render('error', {error}))
                                 })
                                 .catch(error => res.render('error', {error}))
