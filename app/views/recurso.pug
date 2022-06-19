@@ -35,8 +35,15 @@ block content
 
 
     //- Em relação ao recurso, recebe esta informação:
-    //-             recInfo["classificacao"] = classif
-    //-             recInfo["tamanho"] = recurso.tamanho / (1024*1024) //Conversão de bytes para mb. Esta conversão acho que está bem!
-    //-             recInfo["dataCriacao"] = recurso.dataCriacao
-    //-             recInfo["dataRegisto"] = recurso.dataRegisto
-    //-             recInfo["dataUltimaMod"] = recurso.dataUltimaMod //TODO: Se as datas nao funcionarem, diz-me pq sei o que é.
+                recInfo["titulo"] = recurso.titulo
+                recInfo["tipo"] = recurso.tipo
+                recInfo["descricao"] = recurso.descricao
+                recInfo["classificacao"] = classif
+                recInfo["nomeAutor"] = recurso.nomeAutor
+                recInfo["idAutor"] = recurso.idAutor
+                recInfo["tamanho"] = recurso.tamanho / (1024 * 1024) //Conversão de bytes para mb.
+                recInfo["dataCriacao"] = recurso.dataCriacao
+                recInfo["dataRegisto"] = recurso.dataRegisto
+                recInfo["dataUltimaMod"] = recurso.dataUltimaMod //TODO: Testar isto das datas no frontend.
+                recInfo["ficheiros"] = recurso.ficheiros
+                recInfo["nrDownloads"] = recurso.nrDownloads

@@ -14,6 +14,13 @@ module.exports.consultar = id => {
         .exec()
 }
 
+
+module.exports.consultarRecurso = id => {
+    return Publicacao
+        .findOne({idRecurso: id})
+        .exec()
+}
+
 module.exports.addComentario = (id, com) => {
     return Publicacao
         .findOneAndUpdate(

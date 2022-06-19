@@ -58,13 +58,30 @@ router.get('/:id', function (req, res) {
                 if (!classif.length) classif = 0
                 else classif.reduce((total, prox) => total + prox.rating, 0) / classif.length
 
+                recInfo["titulo"] = recurso.titulo
+                recInfo["tipo"] = recurso.tipo
+                recInfo["descricao"] = recurso.descricao
                 recInfo["classificacao"] = classif
+                recInfo["nomeAutor"] = recurso.nomeAutor
+                recInfo["idAutor"] = recurso.idAutor
                 recInfo["tamanho"] = recurso.tamanho / (1024 * 1024) //Conversão de bytes para mb.
                 recInfo["dataCriacao"] = recurso.dataCriacao
                 recInfo["dataRegisto"] = recurso.dataRegisto
                 recInfo["dataUltimaMod"] = recurso.dataUltimaMod //TODO: Testar isto das datas no frontend.
+                recInfo["ficheiros"] = recurso.ficheiros
+                recInfo["nrDownloads"] = recurso.nrDownloads
 
-                res.render('recurso', { recurso: recInfo, dono })
+                axios.get('http://localhost:10000/api/oublicacoes/recurso' + recurso._id + '?token=' + req.cookies.token)
+                    .then(dados => {
+                        var pub = dados.data
+
+                        var comentarios = pub.comments
+                        res.render('recurso', {recurso: recInfo, dono, comentarios: comentarios})
+                    })
+                    .catch(error => res.render('error', {error}))
+
+
+               
             })
             .catch(error => res.render('error', { error }))
     }
@@ -275,7 +292,7 @@ router.post('/classificar/:id', (req, res) => {
             axios.put(`http://localhost:10000/api/recursos/${req.params.id}/classificar/?token=${req.cookies.token}`,
                 { user: token._id, rating: Number.parseInt(req.body.rating) })
                 .then(rec => {
-                    var recurso = rec.data.dados //TODO: Tonecas Verificar se está direito, (talvez seja preciso por rec.data.dados (?))
+                    var recurso = rec.data.dados
                     var noticiaObj = {
                         idAutor: token._id,
                         nomeAutor: token.username,
@@ -287,7 +304,7 @@ router.post('/classificar/:id', (req, res) => {
                         },
                         data: new Date().toISOString().substr(0, 19)
                     }
-                    console.log(noticiaObj)
+                    //console.log(noticiaObj)
                     axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
                         .then(n => {
                             res.redirect('/recursos/' + req.params.id)
@@ -334,21 +351,21 @@ router.get("/download/:id", (req, res) => {
 
 
 // Para remover recursos!! 
-router.get('/:id/remover', (req, res) => {
-    if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res);
-    else {
-        axios.delete('http://localhost:10000/recursos/' + req.params.id + '?token=' + req.cookies.token)
-            .then(dados => {
-                axios.post('http://localhost:10000/noticias/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { estado: 'Eliminado' })
-                    .then(d => {
-                        axios.post('http://localhost:10000/publicacoes/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { visRecurso: false })
-                            .then(d2 => res.redirect('/recursos'))
-                            .catch(error => res.render('error', { error }))
-                    })
-                    .catch(error => res.render('error', { error }))
-            })
-            .catch(error => res.render('error', { error }))
-    }
-})
+// router.get('/:id/remover', (req, res) => {
+//     if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res);
+//     else {
+//         axios.delete('http://localhost:10000/recursos/' + req.params.id + '?token=' + req.cookies.token)
+//             .then(dados => {
+//                 axios.post('http://localhost:10000/noticias/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { estado: 'Eliminado' })
+//                     .then(d => {
+//                         axios.post('http://localhost:10000/publicacoes/atualizarEstado/' + req.params.id + '?token=' + req.cookies.token, { visRecurso: false })
+//                             .then(d2 => res.redirect('/recursos'))
+//                             .catch(error => res.render('error', { error }))
+//                     })
+//                     .catch(error => res.render('error', { error }))
+//             })
+//             .catch(error => res.render('error', { error }))
+//     }
+// })
 
 module.exports = router;
