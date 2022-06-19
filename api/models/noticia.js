@@ -12,4 +12,4 @@ var noticiaSchema = new mongoose.Schema({
   data: {type: String, required: true}
 });
 
-module.exports = mongoose.model('noticia', noticiaSchema)
+module.exports = mongoose.model('noticia', noticiaSchema, 'noticias')

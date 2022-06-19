@@ -225,7 +225,6 @@ router.post('/editar/:id', function (req, res) {
             axios.post('http://localhost:10000/api/recursos/editar/' + req.params.id + '?token=' + req.cookies.token, req.body)
                 .then(rec => {
                     
-                    
                     var noticiaObj = {
                         idAutor: token._id,
                         nomeAutor: token.username,
@@ -308,7 +307,7 @@ router.post('/classificar/:id', (req, res) => {
                     //console.log(noticiaObj)
                     axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
                         .then(n => {
-                            res.redirect('/recursos/' + req.params.id)
+                            res.redirect('/')
                         })
                         .catch(error => res.render('error', { error }))
                 })

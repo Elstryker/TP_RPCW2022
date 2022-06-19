@@ -21,12 +21,11 @@ Noticia.noticiasUtilizador(req.params.id)
     .catch(e => res.status(502).jsonp({error: e}))
 })
 
+
 // Inserir noticia
 router.post('/', function(req, res){
     Noticia.inserir(req.body.noticia)
-        .then(dados => {
-          dados => res.status(201).jsonp({dados})
-        })
+        .then(dados => res.status(201).jsonp({dados}))
         .catch(e => res.status(504).jsonp({error: e}))
 })
 
