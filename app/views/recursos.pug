@@ -38,10 +38,10 @@ block content
                             input.w3-check(type='checkbox',id="visibilidade",name="visibilidade")
                     .w3-row.w3-section
                         div.w3-rest
-                            input(type="button", value='Non-XML', id='add-one-file')
+                            input.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(type="button", value='Adicionar Ficheiro', id='add-one-file')
                     
                     
-                    input(type="submit", value='Criar' id='submit-file')
+                    input.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(type="submit", value='Criar' id='submit-file')
 
                     button(class="w3-btn w3-red" onclick="document.getElementById('addPub').style.display='none'") Cancelar
                     p
@@ -74,7 +74,10 @@ block content
                     .pubRating
                         each r in recursos.dados
                             if r._id == p.idRecurso
-                                -var classif = parseFloat(r.ratings)
+                                if r.ratings
+                                    -var classif = parseFloat(r.ratings)
+                                else
+                                    -var classif = 0
                         
                                 -var i = 5
                                 
