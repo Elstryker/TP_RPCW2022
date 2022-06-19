@@ -13,7 +13,7 @@ block content
                         if n.idAutor == id
                             if n.recurso.estado == 'Novo'
                                 - var acao = 'Adicionaste'
-                            else if n.recurso.estado == 'Editado'
+                            else if n.recurso.estado == 'Atualizado'
                                 - var acao = 'Edistaste'
                             else if n.recurso.estado == 'Apagado'
                                 - var acao = 'Apagaste'
@@ -26,7 +26,7 @@ block content
                         else
                             if n.recurso.estado == 'Novo'
                                 - var acao = 'adicionou'
-                            else if n.recurso.estado == 'Editado'
+                            else if n.recurso.estado == 'Atualizado'
                                 - var acao = 'editou'
                             else if n.recurso.estado == 'Apagado'
                                 - var acao = 'apagou'

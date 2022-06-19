@@ -168,6 +168,7 @@ module.exports.atualizarClassificacao = (idRecurso, rating) => {
 };
 
 module.exports.editar = function (id,r) {
+  console.log(id)
   return Recurso.findByIdAndUpdate({ _id: id }, r, { new: true })
 };
 

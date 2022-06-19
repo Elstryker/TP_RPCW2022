@@ -65,7 +65,7 @@ router.post("/inc/:id", function (req, res) {
 });
 
 
-router.post('editar/:id', function (req, res) {
+router.post('/editar/:id', function (req, res) {
     Recurso.editar(req.params.id,req.body)
         .then(dados => res.status(201).jsonp({ dados }))
         .catch((e) => res.status(511).jsonp({ error: e }))

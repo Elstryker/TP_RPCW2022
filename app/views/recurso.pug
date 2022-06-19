@@ -2,6 +2,35 @@ extends layout
 
 block content
 
+
+
+    center
+        h1  Notícias
+        .recurso
+            .DownloadRec
+                .w3-round-large.w3-teal(style='width:90%;')
+                    a(href="/recursos/download/").button.w3-button.w3-xxlarge.w3-teal.w3-border.w3-border-white.w3-round-large Download
+                    a(href="/recursos/download/").button.w3-button.w3-xxlarge.w3-teal.w3-border.w3-border-white.w3-round-large Download
+            .CommentsRec
+                .w3-round-large.w3-teal(style='width:90%;')
+                    p Comentários
+            .InfoRec
+                .w3-round-large.w3-teal(style='width:90%;')
+                    ul.w3-ul
+                        li
+                            p(style='display: inline') Titulo: 
+                            a(style='display: inline' href="/recursos/") titulo
+                        li= `Descrição: ${"descricao"}`
+                        li
+                            p(style='display: inline') Publicador: 
+                            a(style='display: inline' href="/perfil/") nomeAutor
+                        li= `Data Criação:`
+            .RatingRec
+                .w3-round-large.w3-teal(style='width:95%;')
+
+
+
+
     //- Informação do recurso, e se o user é dono.
 
 
