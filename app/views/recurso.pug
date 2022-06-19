@@ -12,7 +12,6 @@ block content
                 a(href="/recursos/download/"+recurso.id).button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large Download
                 button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"rating_"+recurso.id}').style.display='block'`) Classificar
                 p
-                button.w3-button.w3-xxlarge.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"rating_"+recurso.id}').style.display='block'`) Pré-visualizar
             .CommentsRec
                 .w3-round-large.w3-teal(style='width:90%;')
                     h1 Comentários
@@ -47,6 +46,8 @@ block content
                                         li= "Data de submissão: " + f["submissionDate"]
                                         li= "Tipo MIME: " + f["mimetype"]
                                         li= "Tamanho: " + f["size"]
+                                        li 
+                                            a(href="/recursos/preview/"+recurso.id + "/" + f["_id"]).button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"preview_"+recurso.id}').style.display='block'`) Pré-visualizar
                                 p
                         li
                             if recurso["classificação"]

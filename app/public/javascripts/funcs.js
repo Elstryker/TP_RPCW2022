@@ -95,3 +95,10 @@ function previewFicheiro(nome, path, tipo_mime){
   $('#preview_ficheiro').modal();
 }
 
+function openInNewTab(path) {
+  Object.assign(document.createElement('a'), {
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    href: href,
+  }).click();
+}

@@ -327,4 +327,18 @@ router.get("/download/:id", (req, res) => {
     }
 });
 
+router.get("/preview/:rid/:id", (req, res) => {
+    if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res);
+    else {
+        axios.get("http://localhost:10000/api/recursos/" + req.params.rid + "?token=" + req.cookies.token)
+            .then((recursoData) => {
+                console.log(recursoData.data.ficheiros[0].path)
+                auxFiles.openInNewTab("/files" + recursoData.data.ficheiros[0].path);
+
+
+            })
+            .catch((error) => res.render("error", { error }));
+    }
+});
+
 module.exports = router;
