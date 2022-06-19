@@ -71,7 +71,7 @@ router.get('/:id', function (req, res) {
                 recInfo["ficheiros"] = recurso.ficheiros
                 recInfo["nrDownloads"] = recurso.nrDownloads
 
-                axios.get('http://localhost:10000/api/oublicacoes/recurso' + recurso._id + '?token=' + req.cookies.token)
+                axios.get('http://localhost:10000/api/publicacoes/recurso/' + recurso._id + '?token=' + req.cookies.token)
                     .then(dados => {
                         var pub = dados.data
 
@@ -121,16 +121,18 @@ router.post("/file", upload.single("file"), async function (req, res) {
 
         var visibilidadeRecurso = (req.body.visibilidade == "on")
 
+        console.log(req.body);
+
         var filesList = [];
 
         files.then(function (files) {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
                 var fileActualPath = pathLib.normalize(__dirname.replace("/routes", "/public/files" + file));
-                fs.stat(fileActualPath, (error, stats) => {
-                    console.log(stats);
-                    console.log("???" + fileActualPath)
-                });
+                // fs.stat(fileActualPath, (error, stats) => {
+                //     console.log(stats);
+                //     console.log("???" + fileActualPath)
+                // });
 
                 var fileObj = {
                     creationDate: creationDates[i],
@@ -143,7 +145,7 @@ router.post("/file", upload.single("file"), async function (req, res) {
                     path: file,
                 };
 
-                console.log(fileActualPath);
+                //console.log(fileActualPath);
                 filesList.push(fileObj);
             }
             var dataAtual = new Date().toISOString().substr(0, 19);
@@ -165,20 +167,20 @@ router.post("/file", upload.single("file"), async function (req, res) {
                 .then(recurso => {
                     var novoRecurso = recurso.data.dados
 
-                    pubObj = {
-                        titulo: tituloRecurso,
-                        descricao: descRecurso,
-                        idAutor: token._id,
-                        nomeAutor: token.username,
-                        idRecurso: novoRecurso._id,
-                        dataCriacao: dataRecurso,
-                        visRecurso: novoRecurso.visibilidade
-                    }
+                    if (visibilidadeRecurso) {
 
-                    axios.post('http://localhost:10000/api/publicacoes?token=' + req.cookies.token, { pub: pubObj })
-                        .then(pub => {
+                        pubObj = {
+                            titulo: tituloRecurso,
+                            descricao: descRecurso,
+                            idAutor: token._id,
+                            nomeAutor: token.username,
+                            idRecurso: novoRecurso._id,
+                            dataCriacao: dataRecurso,
+                            visRecurso: novoRecurso.visibilidade
+                        }
 
-                            if (novoRecurso.visibilidade) {
+                        axios.post('http://localhost:10000/api/publicacoes?token=' + req.cookies.token, { pub: pubObj })
+                            .then(pub => {
 
                                 var noticiaObj = {
                                     idAutor: token._id,
@@ -193,11 +195,14 @@ router.post("/file", upload.single("file"), async function (req, res) {
                                 }
 
                                 axios.post('http://localhost:10000/api/noticias?token=' + req.cookies.token, { noticia: noticiaObj })
-                                    .then(dados => res.redirect('/perfil'))
+                                    .then(dados => res.redirect('/recursos'))
                                     .catch(error => res.render('error', { error }))
-                            }
-                        })
-                        .catch((error) => res.render("error", { error }))
+                            
+                            })
+                            .catch((error) => res.render("error", { error }))
+
+                    }
+
                 })
                 .catch((error) => res.render("error", { error }));
         })
