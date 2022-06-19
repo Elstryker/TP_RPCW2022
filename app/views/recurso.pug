@@ -30,6 +30,7 @@ block content
                             p(style='display: inline') Titulo: 
                             a(style='display: inline' href="/recursos/")= recurso["titulo"]
                         li= `Descrição: ${recurso["descricao"]}`
+                        li= `Tipo: ${recurso["tipo"]}`
                         li
                             p(style='display: inline') Publicador: 
                             a(style='display: inline' href="/perfil/"+recurso["idAutor"])= recurso["nomeAutor"]
@@ -46,6 +47,7 @@ block content
                                         li= "Data de submissão: " + f["submissionDate"]
                                         li= "Tipo MIME: " + f["mimetype"]
                                         li= "Tamanho: " + f["size"]
+                                p
                         li
                             if recurso["classificação"]
                                 -var classifs = recurso["classificacao"].map(function(c){return c.rating;})
