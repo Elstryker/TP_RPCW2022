@@ -74,11 +74,11 @@ block content
                     .pubRating
                         each r in recursos.dados
                             if r._id == p.idRecurso
-                                if r.ratings
-                                    -var classif = parseFloat(r.ratings)
-                                else
-                                    -var classif = 0
-                        
+
+                                -var classif = parseFloat(r.ratings)
+                                if isNaN(classif)
+                                    - classif = 0
+
                                 -var i = 5
                                 
                                 while i>0
