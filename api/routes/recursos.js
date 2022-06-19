@@ -38,11 +38,11 @@ router.put('/:id/classificar/', function (req, res) {
             if (!dados) {
                 Recurso.classificar(req.params.id, req.body)
                     .then(dados => res.status(201).jsonp({ dados }))
-                    .catch(e => res.status(500).jsonp({ error: e }))
+                    .catch(e => res.status(513).jsonp({ error: e }))
             }
             else res.status(201).jsonp({ dados })
         })
-        .catch(e => res.status(500).jsonp({ error: e }))
+        .catch(e => res.status(514).jsonp({ error: e }))
 });
 
 // Inserir recursos
@@ -70,7 +70,7 @@ router.post("/inc/:id", function (req, res) {
 router.post('/editar/:id', function (req, res) {
     Recurso.editar(req.params.id,req.body)
         .then(dados => {
-            Publicacao.atualizarEstado(req.params.id,{
+            Publicacao.editarRecurso(req.params.id,{
                titulo:req.body.titulo,
                descricao: req.body.descricao,
                visRecurso: req.body.visibilidade, 

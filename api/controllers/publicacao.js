@@ -30,8 +30,16 @@ module.exports.addComentario = (id, com) => {
         )
 }
 
-module.exports.atualizarEstado = (idRecurso, r) => {
-    console.log(r,idRecurso)
+module.exports.atualizarEstado = (idRecurso, visRecurso) => {
+    return Publicacao
+        .findOneAndUpdate(
+            {idRecurso : idRecurso},
+            {$set: {visRecurso: visRecurso}},
+            {useFindAndModify: false, new: true}
+        ).exec()
+}
+
+module.exports.editarRecurso = (idRecurso, r) => {
     return Publicacao
         .findOneAndUpdate(
             {idRecurso : idRecurso},
