@@ -78,6 +78,20 @@ router.post('/comentar/:id', function(req, res) {
 })
 
 
+router.post('/apagar/:id', function(req, res) {
+    if (!req.cookies.token) aux.consumerTokenGenerator(req.originalUrl, res)
+    else {
+        var token = aux.unveilToken(req.cookies.token)
+
+        if (token.nivel == 'produtor' || token.nivel == 'admin') {
+            axios.delete('http://localhost:10000/api/publicacoes/' + req.params.id + '?token=' + req.cookies.token, req.body)
+                                    .then(dados => res.redirect("/recursos"))
+                                    .catch(error => res.render('error', {error}))
+                                }
+                                
+
+}})
+
 
 
 module.exports = router;

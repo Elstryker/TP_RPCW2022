@@ -39,4 +39,10 @@ router.post('/comentar/:id', function(req,res){
       .catch(e => res.status(506).jsonp({error: e}))
 })
 
+router.delete('/:id', function(req,res){
+    Publicacao.remover(req.params.id)
+      .then(dados => res.status(201).jsonp(dados))
+      .catch(e => res.status(506).jsonp({error: e}))
+})
+
 module.exports = router;

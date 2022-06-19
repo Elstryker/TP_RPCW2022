@@ -49,3 +49,8 @@ module.exports.inserir = p => {
     var novo = new Publicacao(p)
     return novo.save()
 }
+
+module.exports.remover = function (id) {
+    return Publicacao.deleteOne({ _id: id });
+  };
+  
