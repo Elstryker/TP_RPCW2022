@@ -20,6 +20,12 @@ router.get('/:id', function(req, res) {
         .catch(e => res.status(503).jsonp({error: e}))
 })
 
+router.get('/recurso/:id', function(req, res) {
+    Publicacao.consultarRecurso(req.params.id)
+        .then(dados => res.status(200).jsonp(dados))
+        .catch(e => res.status(508).jsonp({error: e}))
+})
+
 router.post('/', function(req,res){
     Publicacao.inserir(req.body.pub)
         .then(dados => res.status(201).jsonp(dados))
@@ -37,6 +43,12 @@ router.post('/comentar/:id', function(req,res){
     Publicacao.addComentario(req.params.id, req.body)
       .then(dados => res.status(201).jsonp(dados))
       .catch(e => res.status(506).jsonp({error: e}))
+})
+
+router.delete('/:id', function(req,res){
+    Publicacao.remover(req.params.id)
+      .then(dados => res.status(201).jsonp(dados))
+      .catch(e => res.status(507).jsonp({error: e}))
 })
 
 module.exports = router;

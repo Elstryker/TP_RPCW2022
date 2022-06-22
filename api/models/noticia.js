@@ -9,7 +9,8 @@ var noticiaSchema = new mongoose.Schema({
     tipo: {type: String, required: true},
     estado: {type: String, required: true}
   }, required: true},
+  visibilidade: {type: Boolean, required: true},
   data: {type: String, required: true}
 });
 
-module.exports = mongoose.model('noticia', noticiaSchema)
+module.exports = mongoose.model('noticia', noticiaSchema, 'noticias')

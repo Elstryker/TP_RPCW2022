@@ -12,20 +12,23 @@ html
 		script(src="/javascripts/jszip.js")
 		script(src='/javascripts/formScripts.js')
 		script(src='/javascripts/funcs.js')
-
+		script(src='/javascripts/script.js')
 
 	body
 		div.w3-bar.w3-teal.w3-large(id="navbar")
 			a.w3-bar-item.w3-button.w3-wide.w3-blue-grey(href='/') Home
-			a.w3-bar-item.w3-button(href='/recursos') Recursos
 			a.w3-bar-item.w3-button(href='/users') Utilizadores
+			a.w3-bar-item.w3-button(href='/noticias') Notícias
 			
 			if (nivel == "consumidor")
 				a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalSignup').style.display='block'") Registar
 				a.w3-bar-item.w3-button.w3-right(onclick="document.getElementById('modalLogin').style.display='block'") Login
-			else 
+			else
+				a.w3-bar-item.w3-button(href='/recursos') Recursos
 				a.w3-bar-item.w3-button(href='/perfil') Perfil
 				a.w3-bar-item.w3-button.w3-right(href="/users/logout") Logout
+				if nome
+					a.w3-bar-item.w3-right= `Bem vindo ${nome}!`
 
 		.w3-modal(id='modalLogin' style=invalidLField ? "display: block" : "display: none")
 			form.w3-modal-content.w3-animate-top.w3-round-large(action="/users/login" method="POST")
@@ -113,18 +116,12 @@ html
 		w3-container.w3-teal.w3-border(opacity='0%')
 			a
 			p
-				
-
+		
+		w3-container.w3-teal.w3-border(opacity='0%')
+			h2
+							
+	
 		footer.w3-container.w3-teal.w3-border
 			center
-				a(href="/") Voltar ao inicio
-				p Grupo X - RPCW 2022
-			
-
-	
-	//- #.navbar
-	//- #    a(href="/",id='home') Home
-	//- #    a(href="/create") Criar
-	//- #    a(href="/profile") Perfil
-	//- #    a(href="/search") Pesquisar
-	//- #    input(type="text", name="searchField", placeholder="Search something...")
+				a(href="/") Voltar ao início
+				p Repositório de Recursos Didáticos | RPCW 2022

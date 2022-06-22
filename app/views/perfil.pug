@@ -53,6 +53,8 @@ block content
                             p= `Comentou o recurso ${n.recurso.titulo}`
                         else if n.recurso.estado == 'Classificado'
                             p= `Classificou o recurso ${n.recurso.titulo}`
+                        else if n.recurso.estado == 'Atualizado'
+                            p= `Editou o recurso ${n.recurso.titulo}`
             else
                 .container.right
                     .content
@@ -63,14 +65,9 @@ block content
                             p= `Comentou o recurso ${n.recurso.titulo}`
                         else if n.recurso.estado == 'Classificado'
                             p= `Classificou o recurso ${n.recurso.titulo}`
+                        else if n.recurso.estado == 'Atualizado'
+                            p= `Editou o recurso ${n.recurso.titulo}`
 
             - left = !left
-
-
-
-//- TODO:Mudar isto!! Avaliar se é admin ou não: nivel=="admin"
-
-//- // user 
-    
 
     

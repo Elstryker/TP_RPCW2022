@@ -24,9 +24,9 @@ router.get("/:id", function (req, res, next) {
             axios.get("http://localhost:10000/api/users/" +req.params.id +"?token=" +req.cookies.token)
                 .then((user) => {
                     var dono = req.params.id == token._id || token.nivel == "admin";
-                    //console.log(noticias.data)
                     res.render("perfil", {
                     nivel: token.nivel,
+                    nome: token.username,
                     dono: dono,
                     user: user.data,
                     noticias: noticias.data,
@@ -65,7 +65,7 @@ router.post("/:id/editar", function (req, res, next) {
                 .catch((error) => res.render("error", { error: error }));
         }
         else {
-            res.redirect("/perfil/");
+            res.render('error', {mensagem: "Não pode editar o perfil de outro utilizador. Certifique-se que tem o seu perfil selecionado!"})
         }
     }
 });

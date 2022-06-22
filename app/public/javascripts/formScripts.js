@@ -28,6 +28,7 @@ $(document).ready(function() {
         var descRecurso = $('#descRecurso').val()
         var tipoRecurso = $('#tipoRecurso').val()
         var dataCriacao = $('#dataCriacao').val()
+        var visibilidade = $('#visibilidade').val()
 
 
         console.log(autorRecurso);
@@ -35,6 +36,17 @@ $(document).ready(function() {
         console.log(descRecurso);
         console.log(tipoRecurso);
         console.log(dataCriacao);
+        console.log(visibilidade);
+
+        if(tituloRecurso.length == 0){
+            alert("Insira um título para o recurso.")
+            return
+        }
+
+        if(tipoRecurso.length == 0){
+            alert("Insira um tipo para o recurso.")
+            return
+        }
 
         for(var tit of title) {
             if(tit.value.length == 0) {
@@ -88,6 +100,7 @@ $(document).ready(function() {
         fd.append('authors', arrAuthors)
         fd.append('titles', arrTitles)
         fd.append('creationDates', arrCreationDates)
+        fd.append('visibilidade', visibilidade)
         
 
         compressAndSendZip(files,fd,'file')

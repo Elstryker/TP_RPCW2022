@@ -14,7 +14,7 @@ module.exports.listar = () => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $avg: "$ratings.rating" }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -37,9 +37,10 @@ module.exports.pesquisarMeusRecursos = (idAutor) => {
         idAutor: 1,
         nomeAutor: 1,
         visibilidade: 1,
-        ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
+        ratings: { $ifNull: [[{ $avg: "$ratings.rating" }, 0], 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        //tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -48,14 +49,8 @@ module.exports.pesquisarMeusRecursos = (idAutor) => {
 
 // pesquisar recursos por autor
 module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
-  var nomeAutor = { $regex: nome, $options: "i" };
-  var matchObj;
-
-  if (meus_recursos) matchObj = { idAutor: meus_recursos, nomeAutor };
-  else matchObj = { nomeAutor };
-
   return Recurso.aggregate([
-    { $match: matchObj },
+    { $match: nomeAutor },
     {
       $project: {
         _id: 1,
@@ -66,7 +61,7 @@ module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -74,15 +69,9 @@ module.exports.pesquisarPorAutor = (nome, meus_recursos) => {
 };
 
 // pesquisar recursos por título
-module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
-  var titulo = { $regex: titulo, $options: "i" };
-  var matchObj;
-
-  if (meus_recursos) matchObj = { idAutor: meus_recursos, titulo };
-  else matchObj = { titulo };
-
+module.exports.pesquisarPorTitulo = (titulo) => {
   return Recurso.aggregate([
-    { $match: matchObj },
+    { $match: {titulo:{$regex: ".*"+titulo+".*"}} },
     {
       $project: {
         _id: 1,
@@ -93,7 +82,7 @@ module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -101,15 +90,9 @@ module.exports.pesquisarPorTitulo = (titulo, meus_recursos) => {
 };
 
 // pesquisar recursos por tipo
-module.exports.pesquisarPorTipo = (tipo, meus_recursos) => {
-  var tipo = { $regex: tipo, $options: "i" };
-  var matchObj;
-
-  if (meus_recursos) matchObj = { idAutor: meus_recursos, tipo };
-  else matchObj = { tipo };
-
+module.exports.pesquisarPorTipo = (tipo) => {
   return Recurso.aggregate([
-    { $match: matchObj },
+    { $match: {tipo: tipo} },
     {
       $project: {
         _id: 1,
@@ -120,7 +103,7 @@ module.exports.pesquisarPorTipo = (tipo, meus_recursos) => {
         visibilidade: 1,
         ratings: { $ifNull: [{ $round: [{ $avg: "$ratings.rating" }, 0] }, 0] },
         dataUltimaMod: 1,
-        tamanho: { $sum: "$ficheiros.size" },
+        tamanho: 1,
         nrDownloads: 1,
       },
     },
@@ -143,7 +126,7 @@ module.exports.consultar = (id) => {
       nomeAutor: 1,
       visibilidade: 1,
       ratings: 1,
-      tamanho: { $sum: "$ficheiros.size" },
+      tamanho: 1,
       ficheiros: 1,
       nrDownloads: 1,
     }
@@ -152,9 +135,9 @@ module.exports.consultar = (id) => {
 
 module.exports.classificar = (idRecurso, rating) => {
   return Recurso.findOneAndUpdate(
-      { _id: idRecurso },
-      { $push: { ratings: rating } },
-      { useFindAndModify: false, new: true }
+    { _id: idRecurso },
+    { $push: { ratings: rating } },
+    { useFindAndModify: false, new: true }
   );
 };
 
@@ -166,8 +149,8 @@ module.exports.atualizarClassificacao = (idRecurso, rating) => {
   );
 };
 
-module.exports.editar = function(r) {
-  return Recurso.findByIdAndUpdate({_id: r.id}, r, {new: true})
+module.exports.editar = function (id,r) {
+  return Recurso.findByIdAndUpdate({ _id: id }, r, { new: true })
 };
 
 

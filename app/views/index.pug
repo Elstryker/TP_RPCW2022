@@ -5,42 +5,60 @@ block content
 
 
     center
-        h1  Notícias 
-        .w3-round-large.w3-teal(style='width:95%;')
+        h1  Últimas Notícias 
+        .w3-round-large.w3-blue-grey(style='width:95%;')
             .w3-container
                 ul.w3-ul
                     each n in noticias
 
-                        if n.idAutor == id
-                            if n.recurso.estado == 'Novo'
-                                - var acao = 'Adicionaste'
-                            else if n.recurso.estado == 'Editado'
-                                - var acao = 'Edistaste'
-                            else if n.recurso.estado == 'Apagado'
-                                - var acao = 'Apagaste'
-                            else if n.recurso.estado == 'Comentado'
-                                - var acao = 'Comentaste'
-                            else if n.recurso.estado == 'Classificado'
-                                - var acao = 'Classificaste'
-                            li
-                                p(style='display: inline')=` ${acao} o recurso ${n.recurso.titulo}`
-                        else
-                            if n.recurso.estado == 'Novo'
-                                - var acao = 'adicionou'
-                            else if n.recurso.estado == 'Editado'
-                                - var acao = 'editou'
-                            else if n.recurso.estado == 'Apagado'
-                                - var acao = 'apagou'
-                            else if n.recurso.estado == 'Comentado'
-                                - var acao = 'comentou'
-                            else if n.recurso.estado == 'Classificado'
-                                - var acao = 'classificou'
-                            li
-                                p(style='display: inline') O utilizador 
-                                a(style='display: inline' href="/perfil/"+n.idAutor)= n.nomeAutor
-                                p(style='display: inline')=` ${acao} o recurso ${n.recurso.titulo}`
+                        if n.visibilidade
 
-        h1  Publicações 
+                            if n.idAutor == id
+                                if n.recurso.estado == 'Novo'
+                                    - var acao = 'Adicionaste'
+                                else if n.recurso.estado == 'Atualizado'
+                                    - var acao = 'Editaste'
+                                else if n.recurso.estado == 'Apagado'
+                                    - var acao = 'Apagaste'
+                                else if n.recurso.estado == 'Comentado'
+                                    - var acao = 'Comentaste'
+                                else if n.recurso.estado == 'Classificado'
+                                    - var acao = 'Classificaste'
+                                li
+                                    p(style='display: inline')=` ${acao} o recurso ${n.recurso.titulo}`
+                            else
+                                if n.recurso.estado == 'Novo'
+                                    - var acao = 'adicionou'
+                                else if n.recurso.estado == 'Atualizado'
+                                    - var acao = 'editou'
+                                else if n.recurso.estado == 'Apagado'
+                                    - var acao = 'apagou'
+                                else if n.recurso.estado == 'Comentado'
+                                    - var acao = 'comentou'
+                                else if n.recurso.estado == 'Classificado'
+                                    - var acao = 'classificou'
+                                li
+                                    p(style='display: inline') O utilizador 
+                                    a(style='display: inline' href="/perfil/"+n.idAutor)= n.nomeAutor
+                                    p(style='display: inline')=` ${acao} o recurso ${n.recurso.titulo}`
+
+        h1  Publicações
+        p Filtrar publicações por:
+            .w3-container.w3-margin
+                .w3-container.w3-border.w3-left-align
+                    b Tipo:                        
+                    input.w3-input.w3-border.w3-light-grey(type="text" id="filtrarTipo" name="tipo" placeholder="Tipo")
+                    br
+                    b Título: 
+                    input.w3-input.w3-border.w3-light-grey(type="text" id="filtrarTitulo" name="titulo" placeholder="Titulo")
+                    br
+                    button.w3-button.w3-border(id='botaoFiltrar') Filtrar
+                    p
+                    button.w3-button.w3-border(id='botaoLimparFiltro') Limpar Filtro
+                    br
+                    br
+                    
+        br
         each p in pubs
             if p.visRecurso
                 .w3-round-large.w3-teal(style='width:90%;')
@@ -48,13 +66,13 @@ block content
                         .pubInfo
                             ul.w3-ul
                                 li
-                                    p(style='display: inline') Titulo: 
+                                    p(style='display: inline') Título: 
                                     a(style='display: inline' href="/recursos/"+p.idRecurso)= p.titulo
                                 li= `Descrição: ${p.descricao}`
                                 li
                                     p(style='display: inline') Publicador: 
                                     a(style='display: inline' href="/perfil/"+p.idAutor)= p.nomeAutor
-                                li= `Data Criação: ${p.dataCriacao}`
+                                li= `Data de Criação: ${p.dataCriacao}`
                                 if p.dataModificacao
                                     li= `Data Modificacao: ${p.dataModificacao}`
                                 else
@@ -62,7 +80,8 @@ block content
                         .pubButtons
                             button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"comment_"+p._id}').style.display='block'`) Comentar
                             p
-                            button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"rating_"+p._id}').style.display='block'`) Inserir
+                            button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"rating_"+p._id}').style.display='block'`) Classificar
+                            p
                         .pubRating
                             each r in recursos
                                 if r._id == p.idRecurso
@@ -88,7 +107,7 @@ block content
                     form.w3-modal-content.w3-animate-top.w3-round-large(action="/publicacoes/comentar/"+p._id method="POST")
                         .w3-container.w3-teal
                             span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"comment_"+p._id}').style.display='none'`) &times;
-                            h2= "Adicionar comentário a " + p.titulo  
+                            h2= "Adicionar comentário a \"" + p.titulo + "\""   
                         .w3-container
                             .w3-row.w3-section
                                 div.w3-rest
@@ -103,7 +122,7 @@ block content
                     form.w3-modal-content.w3-animate-top.w3-round-large(action="/recursos/classificar/"+p.idRecurso method="POST")
                         .w3-container.w3-teal
                             span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"rating_"+p._id}').style.display='none'`) &times;
-                            h2= "Adicionar classificação a " + p.titulo  
+                            h2= "Adicionar classificação a \"" + p.titulo + "\""  
                         .w3-container
                             .w3-row.w3-section
                                 div.w3-rest
@@ -148,7 +167,7 @@ block content
                                         span.fa.fa-star.checked
 
                             
-                            button(type="submit" class="w3-btn w3-teal w3-block w3-section") Comentar
+                            button(type="submit" class="w3-btn w3-teal w3-block w3-section") Classificar
 
                             button(class="w3-btn w3-red" onclick=`document.getElementById('${"rating_"+p._id}').style.display='none'`) Cancelar
                             p

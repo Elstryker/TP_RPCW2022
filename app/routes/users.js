@@ -19,7 +19,7 @@ router.post('/registo', function(req, res) {
                 res.redirect('/')
             }
             else {
-                aux.renderIndex(req.cookies.token, res, {
+                aux.renderIndex(req.cookies.token, res,req, {
                                     invalidSField: dados.data.invalidInput, 
                                     ...req.body,
                                     error_msg: dados.data.error})
@@ -58,7 +58,7 @@ router.post('/login', function(req, res) {
                 res.redirect('/')
             }
             else {
-                aux.renderIndex(req.cookies.token, res, {
+                aux.renderIndex(req.cookies.token, res, req, {
                     invalidLField: dados.data.invalidInput, 
                     ...req.body,
                     error_msg: dados.data.error})
@@ -83,7 +83,7 @@ router.get('/', function(req, res, next) {
                 delete u.password;
                 u.dataRegisto = moment(new Date(u.dataRegisto)).format('DD-MM-YYYY')
             });
-            res.render('users', {nivel: token.nivel, users: users.data})
+            res.render('users', {nivel: token.nivel, users: users.data, nome: token.username})
         })
         .catch(error => res.render('error', {error : error}))
     }

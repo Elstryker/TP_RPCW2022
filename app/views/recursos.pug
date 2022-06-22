@@ -6,7 +6,7 @@ block content
 
     center
 
-        h1  As minhas publicações
+        h1  As minhas Publicações
 
         button.w3-button.w3-xlarge.w3-blue-gray.w3-border.w3-border-white.w3-round-large(onclick="document.getElementById('addPub').style.display='block'") Adicionar Publicação
 
@@ -18,7 +18,7 @@ block content
                 .w3-container
                     .w3-row.w3-section
                         div.w3-rest
-                            input.w3-input.w3-border(type="text" name="titulo" id="tituloRecurso" placeholder="Titulo" required)
+                            input.w3-input.w3-border(type="text" name="titulo" id="tituloRecurso" placeholder="Titulo")
                     .w3-row.w3-section
                         div.w3-rest
                             input.w3-input.w3-border(type="text" name="descricao" id="descRecurso" placeholder="Descrição")
@@ -27,62 +27,58 @@ block content
                             input.w3-input.w3-border(type="text" name="categoria" id="tipoRecurso" placeholder="Categoria")
                     .w3-row.w3-section
                         div.w3-rest
-                            input.w3-input.w3-border(type="text" name="autor" id="autorRecurso" class='file-author' placeholder="Autor" required)
+                            input.w3-input.w3-border(type="text" name="autor" id="autorRecurso" class='file-author' placeholder="Autor")
                     .w3-row.w3-section
                         div.w3-rest
                                 label Data de criação
                                 input(type='date', name='dataCriacao' id="dataCriacao")
                     .w3-row.w3-section
                         div.w3-rest
-                            label(for='form-title') Título
-                            input.file-title(type='text', name='title', id='tituloRecurso' class='file-title' placeholder='Título')
-                            br
-                            label(for='form-author') Autor
-                            input.file-author(type='text', name='author', class='file-author' placeholder='Autor')
-                            br
-                            label(for='form-creationDate') Data de criação
-                            input.file-creationDate(type='date',  class='file-creationDate' name='creationDate')
-                            br
-                            label(for='form-file') Ficheiro
-                            input.file(type='file', name='file', class='file' placeholder='Ficheiro')
-                            br
-                            input(type="button", value='Adicionar mais um ficheiro', id='add-one-file')
+                            p(style='display: inline') Visibilidade pública:
+                            input.w3-check(type='checkbox',id="visibilidade",name="visibilidade")
+                    .w3-row.w3-section
+                        div.w3-rest
+                            input.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(type="button", value='Adicionar Ficheiro', id='add-one-file')
                     
                     
-                    input(type="submit", value='Criar' id='submit-file')
+                    input.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(type="submit", value='Criar' id='submit-file')
 
                     button(class="w3-btn w3-red" onclick="document.getElementById('addPub').style.display='none'") Cancelar
                     p
 
 
 
-        h1  Publicações 
+        h1   
         each p in pubs
             .w3-round-large.w3-teal(style='width:90%;')
                 .publicacao
                     .pubInfo
                         ul.w3-ul
                             li
-                                p(style='display: inline') Titulo: 
+                                p(style='display: inline') Título: 
                                 a(style='display: inline' href="/recursos/"+p.idRecurso)= p.titulo
                             li= `Descrição: ${p.descricao}`
                             li
                                 p(style='display: inline') Publicador: 
                                 a(style='display: inline' href="/perfil/"+p.idAutor)= p.nomeAutor
-                            li= `Data Criação: ${p.dataCriacao}`
+                            li= `Data de Criação: ${p.dataCriacao}`
                             if p.dataModificacao
-                                li= `Data Modificacao: ${p.dataModificacao}`
+                                li= `Data de Modificacao: ${p.dataModificacao}`
                             else
                                 li 
                     .pubButtons
                         button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large(onclick=`document.getElementById('${"comment_"+p._id}').style.display='block'`) Comentar
                         p
-                        button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large Download
+                        a(href="/recursos/download/"+p.idRecurso).button.w3-button.w3-large.w3-teal.w3-border.w3-border-white.w3-round-large Download
+                        p
                     .pubRating
                         each r in recursos.dados
                             if r._id == p.idRecurso
-                                -var classif = r.ratings
-                        
+
+                                -var classif = parseFloat(r.ratings)
+                                if isNaN(classif)
+                                    - classif = 0
+
                                 -var i = 5
                                 
                                 while i>0
@@ -97,15 +93,15 @@ block content
                                         - classif = 0
                                 
                     .pubDownload
-                        button.w3-button.w3-large.w3-amber.w3-border.w3-border-white.w3-round-large(style="width:100px") Editar 
+                        button.w3-button.w3-large.w3-amber.w3-border.w3-border-white.w3-round-large(style="width:100px",onclick=`document.getElementById('${"edit_"+p._id}').style.display='block'`) Editar 
                         p
-                        button.w3-button.w3-large.w3-red.w3-border.w3-border-white.w3-round-large(style="width:100px") Apagar
+                        button.w3-button.w3-large.w3-red.w3-border.w3-border-white.w3-round-large(style="width:100px",onclick=`document.getElementById('${"delete_"+p._id}').style.display='block'`) Apagar
             p
             .w3-modal(id='comment_'+p._id)
                 form.w3-modal-content.w3-animate-top.w3-round-large(action="/publicacoes/comentar/"+p._id method="POST")
                     .w3-container.w3-teal
                         span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"comment_"+p._id}').style.display='none'`) &times;
-                        h2= "Adicionar comentário a " + p.titulo  
+                        h2= "Adicionar comentário a \"" + p.titulo + "\"" 
                     .w3-container
                         .w3-row.w3-section
                             div.w3-rest
@@ -114,4 +110,49 @@ block content
                         button(type="submit" class="w3-btn w3-teal w3-block w3-section") Comentar
 
                         button(class="w3-btn w3-red" onclick=`document.getElementById('${"comment_"+p._id}').style.display='none'`) Cancelar
+                        p
+
+            .w3-modal(id='edit_'+p._id)
+                each r in recursos.dados
+                    if p.idRecurso == r._id
+                        form.w3-modal-content.w3-animate-top.w3-round-large(action="/recursos/editar/"+p.idRecurso method="POST")
+                            .w3-container.w3-teal
+                                span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"edit_"+p._id}').style.display='none'`) &times;
+                                h2= "Editar " + r.titulo  
+                            .w3-container
+                                .w3-row.w3-section
+                                    div(class="w3-col", style="width: 50px")
+                                        p Titulo:
+                                    div.w3-rest
+                                        input.w3-input.w3-border(type="text" name="titulo" id="titulo" placeholder="Titulo" value=r.titulo required)
+                                .w3-row.w3-section
+                                    div(class="w3-col", style="width: 50px")
+                                        p Desc:
+                                    div.w3-rest
+                                        input.w3-input.w3-border(type="text" name="descricao" id="descricao" placeholder="Descrição" value=r.descricao)
+                                .w3-row.w3-section
+                                    div(class="w3-col", style="width: 50px")
+                                        p Tipo:
+                                    div.w3-rest
+                                        input.w3-input.w3-border(type="text" name="tipo" id="tipo" placeholder="Tipo" value=r.tipo required)
+                                .w3-row.w3-section
+                                    div.w3-rest
+                                        p(style='display: inline') Visibilidade pública:
+                                        input.w3-check(type='checkbox',id="visibilidade",name="visibilidade")
+
+                                
+                                button(type="submit" class="w3-btn w3-teal w3-block w3-section") Comentar
+
+                                button(class="w3-btn w3-red" onclick=`document.getElementById('${"edit_"+p._id}').style.display='none'`) Cancelar
+                                p
+
+            .w3-modal(id='delete_'+p._id)
+                form.w3-modal-content.w3-animate-top.w3-round-large(action="/publicacoes/apagar/"+p._id method="POST")
+                    .w3-container.w3-teal
+                        span(class='w3-button w3-display-topright' onclick=`document.getElementById('${"delete_"+p._id}').style.display='none'`) &times;
+                        h2= "De certeza que quer apagar " + p.titulo  + "?"
+         
+                        button(type="submit" class="w3-btn w3-red w3-block w3-section") Apagar
+
+                        button(class="w3-btn w3-red" onclick=`document.getElementById('${"delete_"+p._id}').style.display='none'`) Cancelar
                         p

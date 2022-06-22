@@ -14,6 +14,13 @@ module.exports.consultar = id => {
         .exec()
 }
 
+
+module.exports.consultarRecurso = id => {
+    return Publicacao
+        .findOne({idRecurso: id})
+        .exec()
+}
+
 module.exports.addComentario = (id, com) => {
     return Publicacao
         .findOneAndUpdate(
@@ -23,13 +30,22 @@ module.exports.addComentario = (id, com) => {
         )
 }
 
-module.exports.atualizarEstado = (idRecurso, estado) => {
-    return Publicacao.updateMany(
-        {"idRecurso": idRecurso},
-        [{ $set: {
-            'visRecurso': estado
-        }}],
-        {multi: true})
+module.exports.atualizarEstado = (idRecurso, visRecurso) => {
+    return Publicacao
+        .findOneAndUpdate(
+            {idRecurso : idRecurso},
+            {$set: {visRecurso: visRecurso}},
+            {useFindAndModify: false, new: true}
+        ).exec()
+}
+
+module.exports.editarRecurso = (idRecurso, r) => {
+    return Publicacao
+        .findOneAndUpdate(
+            {idRecurso : idRecurso},
+            {$set: {visRecurso: r.visRecurso,titulo:r.titulo,descricao:r.descricao,dataModificacao:r.dataUltimaMod}},
+            {useFindAndModify: false, new: true}
+        ).exec()
 }
 
 module.exports.alterar = function(u) {
@@ -49,3 +65,11 @@ module.exports.inserir = p => {
     var novo = new Publicacao(p)
     return novo.save()
 }
+
+module.exports.remover = function (id) {
+    return Publicacao.deleteOne({ _id: id });
+  };
+  
+module.exports.editarPorRecurso = function (id,r) {
+    return Publicacao.findByIdAndUpdate({idRecurso : id}, r, { new: true })
+};
