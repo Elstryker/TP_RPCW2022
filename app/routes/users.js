@@ -33,7 +33,7 @@ router.delete('/:id',function(req,res){
     else {
     var token = aux.unveilToken(req.cookies.token)
     if(token.nivel == 'admin') {
-        axios.delete('http://localhost:10000/users/' + req.params.id + '?token=' + req.cookies.token)
+        axios.delete('http://localhost:10000/api/users/' + req.params.id + '?token=' + req.cookies.token)
         .then(dados => {
             res.redirect("/")
         })
