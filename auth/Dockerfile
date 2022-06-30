@@ -1,11 +1,6 @@
-FROM node
-
+FROM node:16.14.0
 WORKDIR /auth
-
-COPY ./*.* .
-
-RUN npm i 
-
-EXPOSE 30000
-
-CMD npm start
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install
+COPY . .
+CMD ["npm", "start"]

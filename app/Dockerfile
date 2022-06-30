@@ -1,11 +1,6 @@
-FROM node
-
+FROM node:16
 WORKDIR /app
-
-COPY ./*.* .
-
-RUN npm i 
-
-EXPOSE 20000
-
-CMD npm start
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install
+COPY . .
+CMD ["npm", "start"]

@@ -2,6 +2,7 @@ version: "3"
 services:
   app:
     container_name: app
+    restart: always
     build: app/
     ports:
       - "20000:20000"
@@ -9,7 +10,7 @@ services:
     container_name: api
     build: api/
     restart: always
-    depends_on: 
+    depends_on:
       - mongo
     ports:
       - "10000:10000"
@@ -17,7 +18,7 @@ services:
     container_name: auth
     build: auth/
     restart: always
-    depends_on: 
+    depends_on:
       - mongo
     ports:
       - "30000:30000"
